@@ -1,9 +1,13 @@
-from flask import Flask
-from flask_simplelogin import SimpleLogin
+from flask import Flask, render_template, LoginManager, url_for
+login_manager = LoginManager()
 
 
 app = Flask(__name__)
-SimpleLogin(app)
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
 
 
 if __name__ == '__main__':
