@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
 
 from config import config, DevelopmentConfig
@@ -14,19 +14,13 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 login_manager_app = LoginManager(app)
 # Crear la conexión a la base de datos
-try:
-    db = mysql.connector.connect(
+db = mysql.connector.connect(
         host=DevelopmentConfig.MYSQL_HOST,
         user=DevelopmentConfig.MYSQL_USER,
         password=DevelopmentConfig.MYSQL_PASSWORD,
         port=DevelopmentConfig.MYSQL_PORT,
         database=DevelopmentConfig.MYSQL_DB
     )
-    print("Conexión exitosa a la base de datos")
-except mysql.connector.Error as error:
-    print("Error de conexión a la base de datos: {}".format(error))
-
-
 
 @login_manager_app.user_loader
 def load_user(id):
@@ -39,8 +33,6 @@ def index():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        #print(request.form['username'])
-        print(request.form['password'])
         user = User(0,request.form['username'],request.form['password'])
         logged_user = ModelUser.login(db,user)
         if logged_user!=None:
@@ -62,10 +54,22 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/home')
+@app.route('/home', methods=['GET','POST'])
 @login_required
 def home():
+    
     return render_template('home.html')
+
+@app.route('/conf', methods=['GET','POST'])
+@login_required
+def conf():
+    return render_template('views/config.html')
+
+
+
+
+
+
 
 def status_401(error):
     return redirect(url_for('login'))
