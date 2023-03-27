@@ -23,31 +23,40 @@ db = mysql.connector.connect(
     )
 
 @login_manager_app.user_loader
-def load_user(id):
-    return ModelUser.get_by_id(db, id)
+def load_user(idlogin):
+    return ModelUser.get_by_id(db, idlogin)
 
 @app.route('/')
 def index():
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET','POST'])
+# def login():
+#     if request.method == 'POST':
+#         user = User(0,request.form['username'],request.form['password'])
+#         logged_user = ModelUser.login(db,user)
+#         if logged_user!=None:
+#             if logged_user.password:
+#                 login_user(logged_user)
+#                 return redirect(url_for('home'))
+#             else:
+#                 flash('Invalid Password')
+#                 return render_template('auth/login.html')
+#         else:
+#             flash('User not Found...')    
+#             return render_template('auth/login.html')   
+#     else:
+#         return render_template('auth/login.html')
+
 def login():
     if request.method == 'POST':
         user = User(0,request.form['username'],request.form['password'])
         logged_user = ModelUser.login(db,user)
-        if logged_user!=None:
-            if logged_user.password:
-                login_user(logged_user)
-                return redirect(url_for('home'))
-        
-            else:
-                flash('Invalid Password')
-                return render_template('auth/login.html')
-        else:
-            flash('User not Found...')    
-            return render_template('auth/login.html')   
-    else:
-        return render_template('auth/login.html')
+        if logged_user and logged_user.password:
+            login_user(logged_user)
+            return redirect(url_for('home'))
+        flash('Invalid Password') if logged_user else flash('User not Found...')
+    return render_template('auth/login.html')
 
 @app.route('/logout')
 def logout():
@@ -57,19 +66,15 @@ def logout():
 @app.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    
+    '''from get_data import get_data'''
+    '''data = get_data(id)'''
+    '''print(data)'''
     return render_template('home.html')
 
 @app.route('/conf', methods=['GET','POST'])
 @login_required
 def conf():
     return render_template('views/config.html')
-
-
-
-
-
-
 
 def status_401(error):
     return redirect(url_for('login'))

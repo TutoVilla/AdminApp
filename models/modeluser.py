@@ -18,10 +18,10 @@ class ModelUser():
             raise Exception(ex)
         
     @classmethod
-    def get_by_id(self, db, id):
+    def get_by_id(self, db, idlogin):
         try:
             cursor = db.cursor()
-            sql = "SELECT id, username, fullname, userid FROM login WHERE id = {}".format(id)
+            sql = "SELECT id, username, fullname, userid FROM login WHERE id = {}".format(idlogin)
             cursor.execute(sql)
             row = cursor.fetchone()
             if row != None:
