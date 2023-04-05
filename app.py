@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import mysql.connector
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
+
+import mysql.connector
 
 from config import config, DevelopmentConfig
 
@@ -13,7 +14,7 @@ from models.entities.user import User
 app = Flask(__name__)
 csrf = CSRFProtect()
 login_manager_app = LoginManager(app)
-# Crear la conexión a la base de datos
+# Database conexion
 db = mysql.connector.connect(
         host=DevelopmentConfig.MYSQL_HOST,
         user=DevelopmentConfig.MYSQL_USER,
@@ -24,30 +25,14 @@ db = mysql.connector.connect(
 
 @login_manager_app.user_loader
 def load_user(idlogin):
-    return ModelUser.get_by_id(db, idlogin)
+    current_user = ModelUser.get_by_id(db, idlogin)
+    return current_user
 
 @app.route('/')
 def index():
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET','POST'])
-# def login():
-#     if request.method == 'POST':
-#         user = User(0,request.form['username'],request.form['password'])
-#         logged_user = ModelUser.login(db,user)
-#         if logged_user!=None:
-#             if logged_user.password:
-#                 login_user(logged_user)
-#                 return redirect(url_for('home'))
-#             else:
-#                 flash('Invalid Password')
-#                 return render_template('auth/login.html')
-#         else:
-#             flash('User not Found...')    
-#             return render_template('auth/login.html')   
-#     else:
-#         return render_template('auth/login.html')
-
 def login():
     if request.method == 'POST':
         user = User(0,request.form['username'],request.form['password'])
@@ -66,10 +51,11 @@ def logout():
 @app.route('/home', methods=['GET','POST'])
 @login_required
 def home():
-    '''from get_data import get_data'''
-    '''data = get_data(id)'''
-    '''print(data)'''
-    return render_template('home.html')
+    if request.method == 'GET': 
+        accounts = ModelUser.get_accounts(db,current_user.userid)
+        return render_template('home.html', accounts=accounts)
+    else:    
+        return render_template('views/config.html')
 
 @app.route('/conf', methods=['GET','POST'])
 @login_required
