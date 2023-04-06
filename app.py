@@ -60,7 +60,17 @@ def home():
 @app.route('/conf', methods=['GET','POST'])
 @login_required
 def conf():
-    return render_template('views/config.html')
+    if request.method == 'GET': 
+        
+        return render_template('views/config.html')
+    else: 
+        a = request.form['amount']
+        print(type(a))
+        print(a) 
+        b = request.form['currency_type']  
+        print(b)
+        return render_template('home.html')
+    
 
 def status_401(error):
     return redirect(url_for('login'))
