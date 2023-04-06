@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<header class="p-3 mb-3 border-bottom">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-body-emphasis">Overview</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
+          <li><a href="{{ url_for('conf') }}" class="nav-link px-2 link-secondary">Configuration</a></li>
+        </ul>
+        <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap" >Bienvenido {{ current_user.fullname }}  </h8>  
+        <a class="btn btn-outline-primary me-2"  href="{{ url_for('logout') }}">Logout</a>
+        
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+<div class="b-example-divider"></div>
+{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center">
+  <div class="container my-5">
+    <div class="bg-secondary text-light py-3">
+        <h3 class="text-center">Create New Account</h3>
+    </div>
+    <form action="/conf" method="POST" >
+     <!--First Block-->
+      <div class="bg-light py-3 my-3">
+        <div class="container">
+          <div class="row col-sm-12">
+            <div class="col-sm-2">
+              <p class="font-weight-bold">Currency Type:</p>
+            </div>
+            <div class="col-sm-2"> 
+              <select class="form-control" name="currency_type" id="currency_type" placeholder="currency_type">
+                <option value="...">Select</option>
+                <option value="$">$ Dolars</option>
+                <option value="£">£ Pounds</option>
+                <option value="€">€ Euros</option>
+              </select>                        
+              </div>
+              <div class="col-sm-2">
+                <p class="font-weight-bold">Amount:</p>
+              </div>
+              <div class="col-sm-3">
+                <div class="input-group">
+                  <input type="number" step="0.01" class="form-control" 
+                  placeholder="0.00" aria-label="Amount" name="amount" id="amount" placeholder="amount">
+                    <div class="input-group-append">
+                      <span class="input-group-text input-group-append" id="currency_symbol"></span>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    <!--Second Block-->
+      <div class="bg-light py-3 my-3">
+        <div class="container">
+          <div class="row col-sm-12">
+            <div class="col-sm-2">
+              <p class="font-weight-bold">Distribution:</p>
+            </div>
+            <div class="row col-sm-3">
+
+              {% for i in range(4) %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheck{{ i }}">
+                <label class="form-check-label" for="flexCheck{{ i }}">
+                  <input type="string" class="form-control" 
+                    placeholder="Insert Name" aria-label="Name" name="Name{{ i }}" id="Name{{ i }}">
+                </label>
+              </div>
+            {% endfor %}
+            
+            </div>
+              <div class="col-sm-2">
+                <p class="font-weight-bold">Amount:</p>
+              </div>
+              <div class="col-sm-3">
+                <div class="input-group">
+                  <input type="number" step="0.01" class="form-control" 
+                  placeholder="0.00" aria-label="Amount" name="amount" id="amount">
+                    <div class="input-group-append">
+                      <span class="input-group-text input-group-append" id="currency_symbol"></span>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="container text-center">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-primary" id="submit_button">Create Account</button>
+      </div>  
+    </form>
+      
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+      <script>
+          $(document).ready(function() {
+              $('#currency_type').change(function() {
+                  var selected_currency = $(this).val();
+                  $('#currency_symbol').text(selected_currency);
+              });
+          });
+      </script>
+  </div> 
+  
+{% endblock %}
