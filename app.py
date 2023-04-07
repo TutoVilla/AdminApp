@@ -55,14 +55,14 @@ def home():
         accounts = ModelUser.get_accounts(db,current_user.userid)
         return render_template('home.html', accounts=accounts)
     else:    
-        return render_template('views/config.html')
+        return render_template('views/addaccount.html')
 
-@app.route('/conf', methods=['GET','POST'])
+@app.route('/addact', methods=['GET','POST'])
 @login_required
-def conf():
+def addact():
     if request.method == 'GET': 
         
-        return render_template('views/config.html')
+        return render_template('views/addaccount.html')
     else: 
         a = request.form['amount']
         print(type(a))

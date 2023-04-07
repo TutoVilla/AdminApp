@@ -12,7 +12,7 @@
           <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Overview</a></li>
           <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
           <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
-          <li><a href="{{ url_for('conf') }}" class="nav-link px-2 link-body-emphasis">Configuration</a></li>
+          <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add Account</a></li>
         </ul>
         <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap" >Bienvenido {{ current_user.fullname }} </h8>  
         <a class="btn btn-outline-primary me-2"  href="{{ url_for('logout') }}">Logout</a>
@@ -48,7 +48,7 @@
     <div class="col-md-12">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <p>No accounts found.</p>
-        <a href="{{ url_for('conf') }}" class="stretched-link">Create new account</a>
+        <a href="{{ url_for('addact') }}" class="stretched-link">Create new account</a>
       </div>
     </div>
   {% endif %}
