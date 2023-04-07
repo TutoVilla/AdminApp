@@ -64,9 +64,7 @@ def addact():
         
         return render_template('views/addaccount.html')
     else: 
-        a = request.form['amount']
-        print(type(a))
-        print(a) 
+        a = request.form['amount'] 
         b = request.form['currency_type']  
         print(b)
         return render_template('home.html')
