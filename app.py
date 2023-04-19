@@ -55,18 +55,16 @@ def home():
         accounts = ModelUser.get_accounts(db,current_user.userid)
         return render_template('home.html', accounts=accounts)
     else:    
-        return render_template('views/config.html')
+        return render_template('views/addaccount.html')
 
-@app.route('/conf', methods=['GET','POST'])
+@app.route('/addact', methods=['GET','POST'])
 @login_required
-def conf():
+def addact():
     if request.method == 'GET': 
         
-        return render_template('views/config.html')
+        return render_template('views/addaccount.html')
     else: 
-        a = request.form['amount']
-        print(type(a))
-        print(a) 
+        a = request.form['amount'] 
         b = request.form['currency_type']  
         print(b)
         return render_template('home.html')
@@ -83,4 +81,5 @@ if __name__ == '__main__':
     csrf.init_app(app)
     app.register_error_handler(401, status_401)
     app.register_error_handler(404, status_404)
-    app.run()
+    app.run(port=8080)
+    
