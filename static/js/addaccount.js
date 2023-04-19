@@ -13,7 +13,10 @@ function createField(
   const6,
   const7,
   index,
-  dist
+  dist,
+  array,
+  out,
+  outputing
 ) {
   const container_1 = document.createElement("div");
   container_1.classList.add("col-4");
@@ -82,16 +85,23 @@ function createField(
     cont3.parentNode.removeChild(cont3);
     cont4.parentNode.removeChild(cont4);
 
-    const indexing = elements.indexOf(deleteElement);
+    const indexing = array.indexOf(deleteElement);
 
     if (indexing !== -1) {
-      elements.splice(indexing, 1);
+      array.splice(indexing, 1);
     }
+    let restAmount = 0;
+    for (let i = 1; i < array.length; i++) {
+      ele = parseFloat(document.getElementById(array[i]).value);
+      restAmount += isNaN(ele) ? 0 : ele;
+    }
+
+    out = parseFloat(initialAmount.value) - parseFloat(restAmount);
+    outputing.textContent = `The rest amount is: ${out} (This Should be 0 Before Continue)`;
   });
 }
-
 //--------------------Function to set listener events---------------------
-function setListener(array) {
+function setListener(array, outputing) {
   array.forEach(function (ar) {
     const el = document.getElementById(ar);
 
@@ -99,16 +109,30 @@ function setListener(array) {
       let restAmount = 0;
       for (let i = 1; i < array.length; i++) {
         ele = parseFloat(document.getElementById(array[i]).value);
-        console.log(ele);
         restAmount += isNaN(ele) ? 0 : ele;
       }
 
       valor = parseFloat(initialAmount.value) - parseFloat(restAmount);
-      output.textContent = `El valor actual del input es: ${valor}`;
+      outputing.textContent = `The rest amount is: ${valor} (This Should be 0 Before Continue)`;
     });
   });
 }
-
+function actualvalue(array,out,val) {
+  
+  if ((array.length = 2)) {
+    array.forEach(function (element) {
+      const el = document.getElementById(element);
+  
+      el.addEventListener("input", () => {
+        let restAmount = parseFloat(document.getElementById(array[1]).value);
+        val = isNaN(valor) ? 0 : initialAmount;
+        val =
+          parseFloat(initialAmount.value) -
+          (isNaN(parseFloat(restAmount)) ? 0 : parseFloat(restAmount));
+        out.textContent = `The rest amount is: ${val} (This Should be 0 Before Continue)`;
+      });
+    });
+  }}
 //----------------------------------------------
 const addButton = document.getElementById("addInputGroup");
 var i = 0;
@@ -116,6 +140,7 @@ const elements = ["amount", "amount-0"];
 const output = document.getElementById("output");
 const initialAmount = document.getElementById(elements[0]);
 var valor = 0;
+actualvalue(elements,output,valor)
 
 addButton.addEventListener("click", () => {
   i++;
@@ -131,18 +156,22 @@ addButton.addEventListener("click", () => {
     "cont4",
     "delete",
     i,
-    distribution
+    distribution,
+    elements,
+    valor,
+    output
   );
-  setListener(elements);
+  setListener(elements, output);
 });
 
 //-------------------second part location of the money
 const addButtonb = document.getElementById("addLocGroup");
 var j = 0;
 const elementsb = ["amount", "amountB-0"];
-const outputb = document.getElementById("outputB");
+const outputB = document.getElementById("outputB");
 const initialAmountb = document.getElementById(elementsb[0]);
 var valorb = 0;
+actualvalue(elementsb,outputB,valorb)
 
 addButtonb.addEventListener("click", () => {
   j++;
@@ -159,38 +188,11 @@ addButtonb.addEventListener("click", () => {
     "container4",
     "deletedb",
     j,
-    distributionb
+    distributionb,
+    elementsb,
+    valorb,
+    outputB
   );
 
-  setListener(elementsb);
-
-  
+  setListener(elementsb, outputB);
 });
-
-//----------------set the amount on page
-
-if ((elements.length = 2)) {
-  elements.forEach(function (element) {
-    const el = document.getElementById(element);
-
-    el.addEventListener("input", () => {
-      let restAmount = parseFloat(document.getElementById(elements[1]).value);
-      valor = isNaN(valor) ? 0 : initialAmount;
-      valor = parseFloat(initialAmount.value) - (isNaN(parseFloat(restAmount)) ? 0 : parseFloat(restAmount));
-      output.textContent = `El valor actual del input es: ${valor}`;
-    });
-  });
-}
-
-if ((elementsb.length = 2)) {
-  elementsb.forEach(function (element) {
-    const elb = document.getElementById(element);
-
-    elb.addEventListener("inputb", () => {
-      let restAmountb = parseFloat(document.getElementById(elementsb[1]).value);
-      valorb = isNaN(valor) ? 0 : initialAmountb;
-      valorb = parseFloat(initialAmountb.value) - (isNaN(parseFloat(restAmountb)) ? 0 : parseFloat(restAmountb));
-      outputb.textContent = `El valor actual del input es: ${valorb}`;
-    });
-  });
-}
