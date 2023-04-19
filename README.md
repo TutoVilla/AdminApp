@@ -22,7 +22,8 @@ This project was developed with the support of ChatGPT, a language model trained
 - MySQL
 - Bootstrap
 - HTML
-- JavaScript<img width="1318" alt="Screenshot 2023-04-19 at 18 58 46" src="https://user-images.githubusercontent.com/80599426/233160624-84bb7113-16a1-4c28-9084-6ed9da4ad0bf.png">
-
+- JavaScript
 - CSS
 - Docker
+
+<img width="500" alt="Screenshot 2023-04-19 at 18 58 46" src="https://user-images.githubusercontent.com/80599426/233160624-84bb7113-16a1-4c28-9084-6ed9da4ad0bf.png">
