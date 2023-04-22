@@ -25,7 +25,7 @@ function createField(
   const newInput = document.createElement("input");
   newInput.setAttribute("type", "text");
   newInput.setAttribute("class", "form-control");
-  newInput.setAttribute("placeholder", "Owner");
+  newInput.setAttribute("placeholder", "Input");
   newInput.setAttribute("aria-label", `${const2}-${index}`);
   newInput.setAttribute("name", `${const2}-${index}`);
   newInput.setAttribute("id", `${const2}-${index}`);
@@ -97,7 +97,7 @@ function createField(
     }
 
     out = parseFloat(initialAmount.value) - parseFloat(restAmount);
-    outputing.textContent = `The rest amount is: ${out} (This Should be 0 Before Continue)`;
+    outputing.textContent = `The rest amount is: ${out.toFixed(2)}`;
   });
 }
 //--------------------Function to set listener events---------------------
@@ -113,7 +113,7 @@ function setListener(array, outputing) {
       }
 
       valor = parseFloat(initialAmount.value) - parseFloat(restAmount);
-      outputing.textContent = `The rest amount is: ${valor} (This Should be 0 Before Continue)`;
+      outputing.textContent = `The rest amount is: ${valor.toFixed(2)}`;
     });
   });
 }
@@ -129,7 +129,7 @@ function actualvalue(array,out,val) {
         val =
           parseFloat(initialAmount.value) -
           (isNaN(parseFloat(restAmount)) ? 0 : parseFloat(restAmount));
-        out.textContent = `The rest amount is: ${val} (This Should be 0 Before Continue)`;
+        out.textContent = `The rest amount is: ${val.toFixed(2)}`;
       });
     });
   }}

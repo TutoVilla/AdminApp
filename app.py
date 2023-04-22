@@ -49,35 +49,6 @@ def login():
     return render_template('auth/login.html')
 
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
-@app.route('/home', methods=['GET', 'POST'])
-@login_required
-def home():
-    if request.method == 'GET':
-        accounts = ModelUser.get_accounts(db, current_user.id)
-        return render_template('home.html', accounts=accounts)
-    else:
-        return render_template('views/addaccount.html')
-
-
-@app.route('/addact', methods=['GET', 'POST'])
-@login_required
-def addact():
-    if request.method == 'GET':
-
-        return render_template('views/addaccount.html')
-    else:
-        a = request.form['amount']
-        b = request.form['currency_type']
-        print(b)
-        return render_template('home.html')
-
-
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -117,6 +88,92 @@ def signup():
 
     else:
         return render_template('auth/signup.html')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/home', methods=['GET', 'POST'])
+@login_required
+def home():
+    if request.method == 'GET':
+        accounts = ModelUser.get_accounts(db, current_user.id)
+        return render_template('home.html', accounts=accounts)
+    else:
+        return render_template('views/addaccount.html')
+
+
+@app.route('/addact', methods=['GET', 'POST'])
+@login_required
+def addact():
+    if request.method == 'GET':
+        return render_template('views/addaccount.html')
+    else:
+        inicialAmount = request.form['amount']
+        currency = request.form['currency_type']
+        
+        #amount of distributions
+        temp = [key for key in request.form.keys() if re.match(r'^amount-\d+$', key)]
+        amount_values = []
+        for var in temp:
+            value = request.form[var]
+            if value.strip():  
+                try:
+                    amount_values.append(float(value))
+                except ValueError:
+                    amount_values.append(0.0)
+            else:
+                amount_values.append(0.0)
+
+        sum_amounts = sum(amount_values)
+        
+        #name of distributions
+        temp = [key for key in request.form.keys() if re.match(r'^Dist-\d+$', key)]
+        distList = (float(request.form[var]) for var in temp)
+
+        #amount of Locations
+        temp = [key for key in request.form.keys() if re.match(r'^amountB-\d+$', key)]
+        amountB_values = []
+        for var in temp:
+            value = request.form[var]
+            if value.strip():  
+                try:
+                    amountB_values.append(float(value))
+                except ValueError:
+                    amountB_values.append(0.0)
+            else:
+                amountB_values.append(0.0)
+
+                
+        sumB_amounts = sum(amountB_values)
+        print(amountB_values)
+        #name of locations
+        temp = [key for key in request.form.keys() if re.match(r'^loc-\d+$', key)]
+        locationList = (float(request.form[var]) for var in temp)
+        
+        
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        return render_template('home.html')
 
 
 def status_401(error):
