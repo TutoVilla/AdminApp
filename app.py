@@ -12,10 +12,16 @@ from config import config, DevelopmentConfig
 from models.modeluser import ModelUser
 # entities
 from models.entities.user import User
+from models.entities.accounts import Account
+
+# Functions
+from src.dbfunctions import DbFunctions
 
 app = Flask(__name__)
 csrf = CSRFProtect()
 login_manager_app = LoginManager(app)
+
+
 # Database conexion
 db = mysql.connector.connect(
     host=DevelopmentConfig.MYSQL_HOST,
@@ -99,8 +105,9 @@ def logout():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+
     if request.method == 'GET':
-        accounts = ModelUser.get_accounts(db, current_user.id)
+        accounts = DbFunctions.get_accounts(db, current_user.id)
         return render_template('home.html', accounts=accounts)
     else:
         return render_template('views/addaccount.html')
@@ -109,18 +116,25 @@ def home():
 @app.route('/addact', methods=['GET', 'POST'])
 @login_required
 def addact():
+
     if request.method == 'GET':
-        return render_template('views/addaccount.html')
+        accounts = DbFunctions.get_accounts(db, current_user.id)
+        currencies = []
+        if len(accounts) != 0:
+            for account in accounts:
+                currencies.append(account.currency)
+        return render_template('views/addaccount.html', accounts=currencies)
     else:
         inicialAmount = request.form['amount']
         currency = request.form['currency_type']
-        
-        #amount of distributions
-        temp = [key for key in request.form.keys() if re.match(r'^amount-\d+$', key)]
+
+        # amount of distributions
+        temp = [key for key in request.form.keys(
+        ) if re.match(r'^amount-\d+$', key)]
         amount_values = []
         for var in temp:
             value = request.form[var]
-            if value.strip():  
+            if value.strip():
                 try:
                     amount_values.append(float(value))
                 except ValueError:
@@ -129,50 +143,31 @@ def addact():
                 amount_values.append(0.0)
 
         sum_amounts = sum(amount_values)
-        
-        #name of distributions
-        temp = [key for key in request.form.keys() if re.match(r'^Dist-\d+$', key)]
-        distList = (float(request.form[var]) for var in temp)
 
-        #amount of Locations
-        temp = [key for key in request.form.keys() if re.match(r'^amountB-\d+$', key)]
+        # name of distributions
+        temp = [key for key in request.form.keys(
+        ) if re.match(r'^Dist-\d+$', key)]
+        distList = [request.form[var] for var in temp]
+
+        # amount of Locations
+        temp = [key for key in request.form.keys(
+        ) if re.match(r'^amountB-\d+$', key)]
         amountB_values = []
         for var in temp:
             value = request.form[var]
-            if value.strip():  
+            if value.strip():
                 try:
                     amountB_values.append(float(value))
                 except ValueError:
                     amountB_values.append(0.0)
             else:
                 amountB_values.append(0.0)
-
-                
         sumB_amounts = sum(amountB_values)
-        print(amountB_values)
-        #name of locations
+
+        # name of locations
         temp = [key for key in request.form.keys() if re.match(r'^loc-\d+$', key)]
-        locationList = (float(request.form[var]) for var in temp)
-        
-        
-       
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        locationList = [request.form[var] for var in temp]
+
         return render_template('home.html')
 
 

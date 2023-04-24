@@ -29,6 +29,7 @@ function createField(
   newInput.setAttribute("aria-label", `${const2}-${index}`);
   newInput.setAttribute("name", `${const2}-${index}`);
   newInput.setAttribute("id", `${const2}-${index}`);
+  newInput.setAttribute('required','');
   container_1.appendChild(newInput);
 
   const container_2 = document.createElement("div");
@@ -52,6 +53,7 @@ function createField(
   newAmount.setAttribute("aria-label", `${const5}-${index}`);
   newAmount.setAttribute("name", `${const5}-${index}`);
   newAmount.setAttribute("id", `${const5}-${index}`);
+  newAmount.setAttribute('required','');
 
   container_3.appendChild(newAmount);
 
@@ -134,6 +136,8 @@ function actualvalue(array,out,val) {
     });
   }}
 //----------------------------------------------
+
+//------------------------------
 const addButton = document.getElementById("addInputGroup");
 var i = 0;
 const elements = ["amount", "amount-0"];
@@ -196,3 +200,4 @@ addButtonb.addEventListener("click", () => {
 
   setListener(elementsb, outputB);
 });
+

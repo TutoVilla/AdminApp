@@ -4,7 +4,7 @@ from models.entities.user import User
 class ModelUser():
 
     @classmethod
-    def login(self, db, user):
+    def login(cls, db, user):
         try:
             cursor = db.cursor()
             sql = """SELECT id, username, password FROM login 
@@ -21,7 +21,7 @@ class ModelUser():
             raise Exception(ex)
 
     @classmethod
-    def get_by_id(self, db, idlogin):
+    def get_by_id(cls, db, idlogin):
         try:
             cursor = db.cursor()
             sql = "SELECT id, username, fullname, email, country, datecreated FROM login WHERE id = {}".format(
@@ -36,21 +36,7 @@ class ModelUser():
             raise Exception(ex)
 
     @classmethod
-    def get_accounts(self, db, id: int):
-        try:
-            if not isinstance(id, int):
-                raise ValueError('loginid must be an integer')
-
-            cursor = db.cursor()
-            sql = 'SELECT idaccount, currency, amount, datecreated, name, datemodified from account WHERE loginid = %s'
-            cursor.execute(sql, (id,))
-            accounts = cursor.fetchall()
-            return accounts
-        except Exception as ex:
-            raise Exception(ex)
-
-    @classmethod
-    def new_user(self, db, newuser):
+    def new_user(cls, db, newuser):
 
         try:
             cursor = db.cursor()

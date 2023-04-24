@@ -40,12 +40,19 @@
               <p class="font-weight-bold">Currency Type:</p>
             </div>
             <div class="col-3"> 
+
               <select class="form-control" name="currency_type" id="currency_type" placeholder="currency_type" required>
                 <option value="..." selected>Select</option>
-                <option value="$">$ Dolars</option>
-                <option value="£">£ Pounds</option>
-                <option value="€">€ Euros</option>
-              </select>                        
+                {% if '$' not in accounts %}
+                  <option value="$">$ Dolars</option>
+                {% endif %}
+                {% if '£' not in accounts %}
+                  <option value="£">£ Pounds</option>
+                {% endif %}
+                {% if '€' not in accounts %}
+                  <option value="€">€ Euros</option>
+                {% endif %}
+              </select>                   
               </div>
               <div class="col-3">
                 <p class="font-weight-bold">Amount:</p>
@@ -74,14 +81,14 @@
               </div>
               <div class="row col-12">
                   <div class="col-4">
-                    <input type="text" class="form-control" placeholder="Input" aria-label="Dist-0" name="Dist-0" id="Dist-0">
+                    <input type="text" class="form-control" placeholder="Input" aria-label="Dist-0" name="Dist-0" id="Dist-0" required>
                   </div>
                   <div class="col-3">
                     <p class="font-weight-bold">Amount:</p>
                   </div>
                   <div class="col-3">
                     <input type="number" step="0.01" class="form-control" 
-                    placeholder="0.00" aria-label="amount-0" name="amount-0" id="amount-0">
+                    placeholder="0.00" aria-label="amount-0" name="amount-0" id="amount-0" required>
                     
                   </div>
                   <div class="col-2"></div>
@@ -105,14 +112,14 @@
       </div>
       <div class="row col-12">
           <div class="col-4">
-            <input type="text" class="form-control" placeholder="Input" aria-label="loc-0" name="loc-0" id="loc-0">
+            <input type="text" class="form-control" placeholder="Input" aria-label="loc-0" name="loc-0" id="loc-0" required>
           </div>
           <div class="col-3">
             <p class="font-weight-bold">Amount:</p>
           </div>
           <div class="col-3">
             <input type="number" step="0.01" class="form-control" 
-            placeholder="0.00" aria-label="amountB-0" name="amountB-0" id="amountB-0">
+            placeholder="0.00" aria-label="amountB-0" name="amountB-0" id="amountB-0" required>
             
           </div>
           <div class="col-2"></div>
@@ -127,7 +134,6 @@
 
       <div class="container text-center">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="i" value="{{ i }}">
         <button type="submit" class="btn btn-primary" id="submit_button">Create Account</button>
       </div>  
     </form>
