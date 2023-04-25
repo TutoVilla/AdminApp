@@ -127,7 +127,9 @@ def addact():
     else:
         inicialAmount = request.form['amount']
         currency = request.form['currency_type']
-
+        now = datetime.datetime.now()
+        date = now.strftime("%Y-%m-%d %H:%M:%S")
+        
         # amount of distributions
         temp = [key for key in request.form.keys(
         ) if re.match(r'^amount-\d+$', key)]
@@ -148,6 +150,7 @@ def addact():
         temp = [key for key in request.form.keys(
         ) if re.match(r'^Dist-\d+$', key)]
         distList = [request.form[var] for var in temp]
+        
 
         # amount of Locations
         temp = [key for key in request.form.keys(
@@ -163,12 +166,14 @@ def addact():
             else:
                 amountB_values.append(0.0)
         sumB_amounts = sum(amountB_values)
-
+        
         # name of locations
         temp = [key for key in request.form.keys() if re.match(r'^loc-\d+$', key)]
         locationList = [request.form[var] for var in temp]
-
-        return render_template('home.html')
+     
+        newAccounts = DbFunctions.addAccountDistLoc(db, current_user.id,currency,distList,amount_values,locationList,amountB_values,inicialAmount,date,date,)
+        accounts = DbFunctions.get_accounts(db, current_user.id)
+        return render_template('home.html', accounts=accounts)
 
 
 def status_401(error):
