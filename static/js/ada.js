@@ -126,3 +126,65 @@ if (elements.length == 2){
     <button class="w-100 btn btn-lg btn-primary" type="submit">Log in</button>
 </form>
     <button class="mt-2 w-100 btn btn-lg btn-primary form-signin" type="submit">Sign up</button>
+
+
+
+-----------------------------------------
+    <div >
+  {% if accounts|length != 0 %}
+  {% for account in accounts %}
+  <div class="col-md-5">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+      <div class="col p-4 d-flex flex-column position-static">
+        <strong class="d-inline-block mb-2 text-primary">Account in {{ account.currency }}</strong>
+        <h3 class="mb-0"> {{ account.currency }}{{ account.amount }} </h3>
+        <div class="mb-1 text-body-secondary">Last Update {{ account.datemodified.strftime('%d/%m/%Y') }}
+          <br />{{ account.datemodified.strftime("%H:%M:%S") }}
+        </div>
+        <div>
+          <H1 class="mb-0">LOCATIONS</H1>
+          {% for loca in locs %}
+          {% if loca.accountid == account.id %}
+          <div class="d-inline-block flex-row flex-column">
+            <h5 class="mb-0"> {{ loca.name }} --> {{ loca.amount }} </h5>
+          </div>
+          <br />
+          {% endif %}
+          {% endfor %}
+
+        </div>
+        <div>
+          <H1 class="mb-0">DISTRIBUTION</H1>
+          {% for dstr in dsrts %}
+          {% if dstr.accountid == account.id %}
+          <div class="d-inline-block flex-row flex-column">
+            <h5 class="mb-0"> {{ dstr.name }} --> {{ dstr.amount }} </h5>
+          </div>
+          <br />
+          {% endif %}
+          {% endfor %}
+        </div>
+        <H1 class="mb-0">----------------------------</H1>
+        {% for total in totals %}
+        {% if total.accountid == account.id %}
+        <div class="d-inline-block flex-row flex-column">
+          <h5 class="mb-0"> TOTAL IN ACCOUNT: {{ account.currency }}{{ total.total }} </h5>
+        </div>
+        <br />
+        {% endif %}
+        {% endfor %}
+      </div>
+      <a href="#" class="stretched-link">Continue reading</a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="col-md-12">
+  <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+    <p>No accounts found.</p>
+    <a href="{{ url_for('addact') }}" class="stretched-link">Create new account</a>
+  </div>
+</div>
+{% endif %}
+</div>

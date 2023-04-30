@@ -12,7 +12,7 @@ from config import config, DevelopmentConfig
 from models.modeluser import ModelUser
 # entities
 from models.entities.user import User
-from models.entities.accounts import Account
+from models.entities.accounts import Account, Distribution, Location, Total
 
 # Functions
 from src.dbfunctions import DbFunctions
@@ -108,7 +108,25 @@ def home():
 
     if request.method == 'GET':
         accounts = DbFunctions.get_accounts(db, current_user.id)
-        return render_template('home.html', accounts=accounts)
+        dstrs = []
+        locs = []
+        totals = []
+        totalDst = 0
+        totalLoc = 0
+        for account in accounts:
+            dst = DbFunctions.get_distribution(db, account.id)
+            loca = DbFunctions.get_location(db, account.id)
+            for i in dst:
+                dstrs.append(i)
+                totalDst += i.amount
+            for i in loca:
+                locs.append(i)
+                totalLoc += i.amount
+            total = Total(round(float((totalLoc - totalDst)),2), account.id)
+
+            totals.append(total)
+
+        return render_template('home.html', accounts=accounts, dsrts=dstrs, locs=locs, totals=totals)
     else:
         return render_template('views/addaccount.html')
 
@@ -129,7 +147,7 @@ def addact():
         currency = request.form['currency_type']
         now = datetime.datetime.now()
         date = now.strftime("%Y-%m-%d %H:%M:%S")
-        
+
         # amount of distributions
         temp = [key for key in request.form.keys(
         ) if re.match(r'^amount-\d+$', key)]
@@ -150,7 +168,6 @@ def addact():
         temp = [key for key in request.form.keys(
         ) if re.match(r'^Dist-\d+$', key)]
         distList = [request.form[var] for var in temp]
-        
 
         # amount of Locations
         temp = [key for key in request.form.keys(
@@ -166,12 +183,13 @@ def addact():
             else:
                 amountB_values.append(0.0)
         sumB_amounts = sum(amountB_values)
-        
+
         # name of locations
         temp = [key for key in request.form.keys() if re.match(r'^loc-\d+$', key)]
         locationList = [request.form[var] for var in temp]
-     
-        newAccounts = DbFunctions.addAccountDistLoc(db, current_user.id,currency,distList,amount_values,locationList,amountB_values,inicialAmount,date,date,)
+
+        newAccounts = DbFunctions.addAccountDistLoc(
+            db, current_user.id, currency, distList, amount_values, locationList, amountB_values, inicialAmount, date, date,)
         accounts = DbFunctions.get_accounts(db, current_user.id)
         return render_template('home.html', accounts=accounts)
 

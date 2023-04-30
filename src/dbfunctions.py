@@ -1,4 +1,4 @@
-from models.entities.accounts import Account
+from models.entities.accounts import Account, Distribution, Location
 
 class DbFunctions():
 
@@ -13,9 +13,44 @@ class DbFunctions():
             rows = cursor.fetchall()
             accounts = []
             for row in rows:
-                account = Account(row[0], row[1], row[2],row[3],row[4],row[5])
+                account = Account(row[0], row[1], row[2],round(row[3],2),row[4],row[5])
                 accounts.append(account)
             return accounts
+            
+        except Exception as ex:
+            raise Exception(ex)
+    
+    @classmethod   
+    def get_distribution(cls,db,idaccount : int):
+        try:
+            if not isinstance(idaccount, int):
+                raise ValueError('idaccount must be an integer')
+            cursor = db.cursor()
+            sql = 'SELECT iddistribution, name, amount from distribution WHERE accountid = %s'
+            cursor.execute(sql, (idaccount,))
+            rows = cursor.fetchall()
+            dstrs = []
+            for row in rows:
+                dstr = Distribution(row[0],idaccount, row[1], round(row[2],2),'','',0)
+                dstrs.append(dstr)
+            return dstrs
+            
+        except Exception as ex:
+            raise Exception(ex)
+    @classmethod   
+    def get_location(cls,db,idaccount : int):
+        try:
+            if not isinstance(idaccount, int):
+                raise ValueError('idaccount must be an integer')
+            cursor = db.cursor()
+            sql = 'SELECT iddistribution, name, amount from location WHERE accountid = %s'
+            cursor.execute(sql, (idaccount,))
+            rows = cursor.fetchall()
+            locs = []
+            for row in rows:
+                loc = Location(row[0],idaccount, row[1], round(row[2],2),'','',0)
+                locs.append(loc)
+            return locs
             
         except Exception as ex:
             raise Exception(ex)
