@@ -105,30 +105,34 @@ def logout():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
-
+    accounts = DbFunctions.get_accounts(db, current_user.id)
     if request.method == 'GET':
-        accounts = DbFunctions.get_accounts(db, current_user.id)
+
         dstrs = []
         locs = []
         totals = []
         totalDst = 0
         totalLoc = 0
-        for account in accounts:
-            dst = DbFunctions.get_distribution(db, account.id)
-            loca = DbFunctions.get_location(db, account.id)
-            for i in dst:
-                dstrs.append(i)
-                totalDst += i.amount
-            for i in loca:
-                locs.append(i)
-                totalLoc += i.amount
-            total = Total(round(float((totalLoc - totalDst)),2), account.id)
 
-            totals.append(total)
+        if len(accounts) > 0:
+            for account in accounts:
+                dst = DbFunctions.get_distribution(db, account.id)
+                loca = DbFunctions.get_location(db, account.id)
+                for i in dst:
+                    dstrs.append(i)
+                    totalDst += i.amount
+                for i in loca:
+                    locs.append(i)
+                    totalLoc += i.amount
+
+                total = Total(
+                    round(float((totalLoc - totalDst)), 2), account.id)
+                totals.append(total)
 
         return render_template('home.html', accounts=accounts, dsrts=dstrs, locs=locs, totals=totals)
-    else:
-        return render_template('views/addaccount.html')
+
+    elif request.method == 'POST':
+        return render_template(url_for('home'))
 
 
 @app.route('/addact', methods=['GET', 'POST'])
@@ -142,7 +146,7 @@ def addact():
             for account in accounts:
                 currencies.append(account.currency)
         return render_template('views/addaccount.html', accounts=currencies)
-    else:
+    elif request.method == 'POST':
         inicialAmount = request.form['amount']
         currency = request.form['currency_type']
         now = datetime.datetime.now()
@@ -162,8 +166,6 @@ def addact():
             else:
                 amount_values.append(0.0)
 
-        sum_amounts = sum(amount_values)
-
         # name of distributions
         temp = [key for key in request.form.keys(
         ) if re.match(r'^Dist-\d+$', key)]
@@ -182,17 +184,14 @@ def addact():
                     amountB_values.append(0.0)
             else:
                 amountB_values.append(0.0)
-        sumB_amounts = sum(amountB_values)
 
         # name of locations
         temp = [key for key in request.form.keys() if re.match(r'^loc-\d+$', key)]
         locationList = [request.form[var] for var in temp]
 
-        newAccounts = DbFunctions.addAccountDistLoc(
-            db, current_user.id, currency, distList, amount_values, locationList, amountB_values, inicialAmount, date, date,)
-        accounts = DbFunctions.get_accounts(db, current_user.id)
-        return render_template('home.html', accounts=accounts)
-
+        DbFunctions.addAccountDistLoc(db, current_user.id, currency, distList,
+                                      amount_values, locationList, amountB_values, inicialAmount, date, date,)
+        return redirect(url_for('home'))
 
 def status_401(error):
     return redirect(url_for('login'))

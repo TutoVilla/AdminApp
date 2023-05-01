@@ -30,59 +30,72 @@
 <div class="b-example-divider"></div>
 {% endblock %}
 
+
 {% block body %}
 <div>
   {% if accounts|length != 0 %}
-  <div class="row">
+  <div class="row p-2">
     {% for account in accounts %}
-      <div class="col-md-4">
-        <div class="border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-          <div class="p-4 d-flex flex-column position-static">
-            <h3 class="text-center mb-3">Account in {{ account.currency }}</h3>
-            <h4 class="text-center">{{ account.currency }}{{ account.amount }}</h4>
-            <div class="text-center mb-1 text-body-secondary">Last Update {{ account.datemodified.strftime('%d/%m/%Y') }} {{ account.datemodified.strftime("%H:%M:%S") }}</div>
+    <div class="col-md-4">
+      <div class="card bg-dark text-white p-1 text-center" style="border-radius: 1rem">
+        <h3 class="text-center mb-3">Account in {{ account.currency }}</h3>
+        <div class="border rounded overflow-hidden flex-md-row shadow-sm h-md-250 position-relative">
+          <div class="p-1 d-flex flex-column position-static">
+            {% for total in totals %}
+            {% if total.accountid == account.id %}
+            <p class="mb-0 text-white-50">TOTAL IN ACCOUNT: {{ account.currency }}{{ total.total }}</p>
+            {% endif %}
+            {% endfor %}
+            <div class="text-white">Last Update {{ account.datemodified.strftime('%d/%m/%Y') }} {{
+              account.datemodified.strftime("%H:%M:%S") }}</div>
             <hr>
-            <div class="d-flex justify-content-between">
-              <div>
-                <h4 class="text-center mb-3">LOCATIONS</h4>
-                {% for loca in locs %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card text-bg-dark border rounded list-group-flush">
+                  <h5 class="card-header text-center">LOCATIONS</h5>
+                  {% for loca in locs %}
                   {% if loca.accountid == account.id %}
-                    <div class="d-inline-block flex-row flex-column">
-                      <h5 class="mb-0">{{ loca.name }} --> {{ loca.amount }}</h5>
-                    </div>
-                    <br>
+                  <div class="card-body p-1 text-center">
+                      <p class="mb-0 col-12">{{ loca.name }}</p>
+                      <div class="input-group">
+                        <span class="input-group-text col-1">{{ account.currency }}</span>
+                        <input type="number" class="form-control loca-amount col-6" value="{{ loca.amount }}"
+                          onChange="saveLocaAmount(event)">
+                      </div>
+                  </div>
                   {% endif %}
-                {% endfor %}
+                  {% endfor %}
+                </div>
               </div>
-              <div>
-                <h4 class="text-center mb-3">DISTRIBUTION</h4>
-                {% for dstr in dsrts %}
+              <div class="col-md-6">
+                <div class="card border text-bg-dark rounded list-group-flush">
+                  <h5 class="card-header text-center">DISTRIBUTION</h5>
+                  {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}
-                    <div class="d-inline-block flex-row flex-column">
-                      <h5 class="mb-0">{{ dstr.name }} --> {{ dstr.amount }}</h5>
-                    </div>
-                    <br>
+                  <div class="card-body p-1">
+                      <p class="mb-0 col-12">{{ dstr.name }}</p>
+                      <div class="input-group">
+                        <span class="input-group-text col-1">{{ account.currency }}</span>
+                        <input type="number" class="form-control dstr-amount col-5" value="{{ dstr.amount }}"
+                          onChange="saveLocaAmount(event)">
+                      </div>
+                  </div>
                   {% endif %}
-                {% endfor %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
+            
             <hr>
-            {% for total in totals %}
-              {% if total.accountid == account.id %}
-                <div class="d-inline-block flex-row flex-column">
-                  <h5 class="mb-0 text-center">TOTAL IN ACCOUNT: {{ account.currency }}{{ total.total }}</h5>
-                </div>
-                <br>
-              {% endif %}
-            {% endfor %}
           </div>
           <button class="btn btn-sm btn-danger delete-account" data-account-id="{{ account.id }}">Eliminar</button>
         </div>
-       
       </div>
-      
+    </div>
     {% endfor %}
-  </div>  
+  </div>
+  <hr>
+
   {% else %}
   <div class="col-md-12">
     <div class="card">
