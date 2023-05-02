@@ -36,7 +36,7 @@
   {% if accounts|length != 0 %}
   <div class="row p-2">
     {% for account in accounts %}
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card bg-dark text-white p-1 text-center" style="border-radius: 1rem">
         <h3 class="text-center mb-3">Account in {{ account.currency }}</h3>
         <div class="border rounded overflow-hidden flex-md-row shadow-sm h-md-250 position-relative">
@@ -51,7 +51,7 @@
             <hr>
             <div class="row">
               <div class="col-md-6">
-                <div class="card text-bg-dark border rounded list-group-flush">
+                <div class="card text-bg-dark border rounded p-1">
                   <h5 class="card-header text-center">LOCATIONS</h5>
                   {% for loca in locs %}
                   {% if loca.accountid == account.id %}
@@ -59,26 +59,34 @@
                       <p class="mb-0 col-12">{{ loca.name }}</p>
                       <div class="input-group">
                         <span class="input-group-text col-1">{{ account.currency }}</span>
-                        <input type="number" class="form-control loca-amount col-6" value="{{ loca.amount }}"
+                        <input type="number" data-account-id="{{ loca.iddistribution }}" class="form-control loca-amount col-6" value="{{ loca.amount }}"
                           onChange="saveLocaAmount(event)">
                       </div>
+                
                   </div>
                   {% endif %}
                   {% endfor %}
+                  <hr>
+                  <button type="button" class="btn btn-secondary p-1 col-12" id="addDstr">UPDATE</button>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="card border text-bg-dark rounded list-group-flush">
-                  <h5 class="card-header text-center">DISTRIBUTION</h5>
+                <div class="card border text-bg-dark rounded">
+                  <h5 class="card-header text-center">Holding
+                  </h5>
                   {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}
-                  <div class="card-body p-1">
-                      <p class="mb-0 col-12">{{ dstr.name }}</p>
-                      <div class="input-group">
-                        <span class="input-group-text col-1">{{ account.currency }}</span>
-                        <input type="number" class="form-control dstr-amount col-5" value="{{ dstr.amount }}"
-                          onChange="saveLocaAmount(event)">
-                      </div>
+                  <div class="card-body p-1 text-center">
+                    <p class="mb-0 col-12">{{ dstr.name }}</p>
+                    <div class="input-group">
+                      <p class="input-group-text col-1">{{ account.currency }}</p>
+                      <p class="form-control col-10">{{ dstr.amount }}</p>
+                    </div>
+                    <div class="input-group">
+                      <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">ADD TRANSACTION</button>
+                      <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">VIEW DETAIL</button>
+                    </div>
+                    <hr>
                   </div>
                   {% endif %}
                   {% endfor %}
@@ -88,7 +96,9 @@
             
             <hr>
           </div>
-          <button class="btn btn-sm btn-danger delete-account" data-account-id="{{ account.id }}">Eliminar</button>
+          <button class="btn btn-sm btn-danger delete-account" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
+          <menu type="context">
+          
         </div>
       </div>
     </div>
@@ -107,5 +117,7 @@
   </div>
   {% endif %}
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="static/js/home.js"></script>
 {% endblock %}
