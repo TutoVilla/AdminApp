@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, validate_csrf
+from wtforms import ValidationError
+
 import datetime
 import re
+import json
 
 import mysql.connector
 
@@ -12,7 +15,7 @@ from config import config, DevelopmentConfig
 from models.modeluser import ModelUser
 # entities
 from models.entities.user import User
-from models.entities.accounts import Account, Distribution, Location, Total
+from models.entities.accounts import Total
 
 # Functions
 from src.dbfunctions import DbFunctions
@@ -111,19 +114,20 @@ def home():
         dstrs = []
         locs = []
         totals = []
-        totalDst = 0
-        totalLoc = 0
 
         if len(accounts) > 0:
+
             for account in accounts:
+                totalDst = 0
+                totalLoc = 0
                 dst = DbFunctions.get_distribution(db, account.id)
                 loca = DbFunctions.get_location(db, account.id)
                 for i in dst:
                     dstrs.append(i)
                     totalDst += i.amount
-                for i in loca:
-                    locs.append(i)
-                    totalLoc += i.amount
+                for j in loca:
+                    locs.append(j)
+                    totalLoc += j.amount
 
                 total = Total(
                     round(float((totalLoc - totalDst)), 2), account.id)
@@ -192,6 +196,38 @@ def addact():
         DbFunctions.addAccountDistLoc(db, current_user.id, currency, distList,
                                       amount_values, locationList, amountB_values, inicialAmount, date, date,)
         return redirect(url_for('home'))
+
+
+@app.route('/to_delete/<int:account_id>')
+@login_required
+def toDelete(account_id):
+    accountName = DbFunctions.get_account(db, account_id)
+
+    return jsonify(objecto=accountName.currency)
+
+
+@app.route('/delete_account/<int:account_id>')
+@login_required
+def delete(account_id):
+    DbFunctions.delete_account(db, account_id)
+    return redirect(url_for('home'))
+
+
+@app.route('/update_account', methods=['POST'])
+def update_account():
+    csrf_token = request.form.get('csrf_token')
+    try:
+        validate_csrf(csrf_token)
+    except ValidationError:
+        abort(400, 'Token CSRF inválido')
+    loc_data = request.form.get('loc_data')
+    loc_dict = json.loads(loc_data)
+    id
+
+    DbFunctions.update_location(db, loc_dict)
+
+    return jsonify({'message': 'Location updated successfully'})
+
 
 def status_401(error):
     return redirect(url_for('login'))

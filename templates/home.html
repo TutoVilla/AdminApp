@@ -59,15 +59,16 @@
                       <p class="mb-0 col-12">{{ loca.name }}</p>
                       <div class="input-group">
                         <span class="input-group-text col-1">{{ account.currency }}</span>
-                        <input type="number" data-account-id="{{ loca.iddistribution }}" class="form-control loca-amount col-6" value="{{ loca.amount }}"
-                          onChange="saveLocaAmount(event)">
+                        
+                        <input type="number" data-loc-id="{{ loca.idlocation }}" account-id='{{ account.id }}' id="locations" class="form-control loca-amount col-6" value="{{ loca.amount }}">
                       </div>
                 
                   </div>
                   {% endif %}
                   {% endfor %}
                   <hr>
-                  <button type="button" class="btn btn-secondary p-1 col-12" id="addDstr">UPDATE</button>
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="summit" class="btn btn-secondary p-1 col-12 updateLocations" account-id-bt='{{ account.id }}' id="updateLocations">UPDATE</button>
                 </div>
               </div>
               <div class="col-md-6">
@@ -96,7 +97,7 @@
             
             <hr>
           </div>
-          <button class="btn btn-sm btn-danger delete-account" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
+          <button class="btn btn-sm btn-danger deleteAccount" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
           <menu type="context">
           
         </div>

@@ -21,8 +21,8 @@ class Distribution():
         
 class Location():
     
-    def __init__(self,iddistribution,accountid,name,amount,datecreated="",datemodified="",type=0) -> None:
-        self.idlocation = iddistribution
+    def __init__(self,idloca,accountid,name,amount,datecreated="",datemodified="",type=0) -> None:
+        self.idlocation = idloca
         self.accountid = accountid
         self.name = name
         self.amount = amount
