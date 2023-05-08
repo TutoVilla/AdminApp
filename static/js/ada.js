@@ -1,5 +1,7 @@
 if (elements.length == 2){    
-    elements.forEach(function(element){
+    
+  
+
         const el = document.getElementById(element);
     
         el.addEventListener('input', () => {
@@ -188,3 +190,49 @@ if (elements.length == 2){
 </div>
 {% endif %}
 </div>
+
+------------------
+<div class="col-3">
+                <p class="font-weight-bold">Amount:</p>
+              </div>
+              <div class="col-3">
+                <div class="input-group">
+                <input type="number" step="0.01" class="form-control" 
+                  placeholder="0.00" aria-label="amount" name="amount" id="amount" placeholder="amount" min='0' required></input>
+                    <div class="input-group-append">
+                      <span class="input-group-text input-group-append" id="currency_symbol">...</span>
+                    </div>
+                </div>
+              </div>
+
+
+
+//--------------------Function to set listener events---------------------
+function setListener(array, outputing) {
+  array.forEach(function (ar) {
+    const el = document.getElementById(ar);
+
+    el.addEventListener("input", () => {
+      let restAmount = 0;
+      for (let i = 1; i < array.length; i++) {
+        ele = parseFloat(document.getElementById(array[i]).value);
+        restAmount += isNaN(ele) ? 0 : ele;
+      }
+
+      valor = parseFloat(initialAmount.value) - parseFloat(restAmount);
+      outputing.textContent = `The rest amount is: ${valor.toFixed(2)}`;
+    });
+  });
+}
+
+for (let i = ii; i < arrayDistribution.length; i++) {
+  const ele = document.getElementById(arrayDistribution[i]);
+  ele.addEventListener("input", () => {
+    locationValue = parseFloat(document.getElementById(arrayLocation[i]).value)
+    distributionValue = parseFloat(document.getElementById(arrayDistribution[i]).value)
+    let initialAmount = isNaN(locationValue) ? 0 : locationValue
+    let restAmount = isNaN(distributionValue) ? 0 : distributionValue
+    totalValue = initialAmount - restAmount
+    output.textContent = `The rest amount is: ${totalValue.toFixed(2)}`;
+  })
+}};

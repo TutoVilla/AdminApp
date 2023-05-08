@@ -15,8 +15,8 @@ function createField(
   index,
   dist,
   array,
-  out,
-  outputing
+  output,
+  arrayStatic
 ) {
   const container_1 = document.createElement("div");
   container_1.classList.add("col-4");
@@ -29,7 +29,7 @@ function createField(
   newInput.setAttribute("aria-label", `${const2}-${index}`);
   newInput.setAttribute("name", `${const2}-${index}`);
   newInput.setAttribute("id", `${const2}-${index}`);
-  newInput.setAttribute('required','');
+  newInput.setAttribute("required", "");
   container_1.appendChild(newInput);
 
   const container_2 = document.createElement("div");
@@ -42,7 +42,7 @@ function createField(
   container_2.appendChild(p_1);
 
   const container_3 = document.createElement("div");
-  container_3.classList.add("col-3");
+  container_3.classList.add("col-4");
   container_3.setAttribute("id", `${const4}-${index}`);
 
   const newAmount = document.createElement("input");
@@ -53,12 +53,12 @@ function createField(
   newAmount.setAttribute("aria-label", `${const5}-${index}`);
   newAmount.setAttribute("name", `${const5}-${index}`);
   newAmount.setAttribute("id", `${const5}-${index}`);
-  newAmount.setAttribute('required','');
+  newAmount.setAttribute("required", "");
 
   container_3.appendChild(newAmount);
 
   const container_4 = document.createElement("div");
-  container_4.classList.add("col-2");
+  container_4.classList.add("col-1");
   container_4.setAttribute("id", `${const6}-${index}`);
 
   const deleted = document.createElement("button");
@@ -92,96 +92,66 @@ function createField(
     if (indexing !== -1) {
       array.splice(indexing, 1);
     }
-    let restAmount = 0;
-    for (let i = 1; i < array.length; i++) {
-      ele = parseFloat(document.getElementById(array[i]).value);
-      restAmount += isNaN(ele) ? 0 : ele;
-    }
-
-    out = parseFloat(initialAmount.value) - parseFloat(restAmount);
-    outputing.textContent = `The rest amount is: ${out.toFixed(2)}`;
+    calculus(array, arrayStatic, output);
   });
 }
-//--------------------Function to set listener events---------------------
-function setListener(array, outputing) {
-  array.forEach(function (ar) {
-    const el = document.getElementById(ar);
 
-    el.addEventListener("input", () => {
-      let restAmount = 0;
-      for (let i = 1; i < array.length; i++) {
-        ele = parseFloat(document.getElementById(array[i]).value);
-        restAmount += isNaN(ele) ? 0 : ele;
-      }
-
-      valor = parseFloat(initialAmount.value) - parseFloat(restAmount);
-      outputing.textContent = `The rest amount is: ${valor.toFixed(2)}`;
-    });
-  });
-}
-function actualvalue(array,out,val) {
-  
-  if ((array.length = 2)) {
-    array.forEach(function (element) {
-      const el = document.getElementById(element);
-  
+function actualvalue(arrayMod, arrayStatic, output, ii, bool) {
+  if (bool) {
+    arrayMod.forEach(function (ar) {
+      const el = document.getElementById(ar);
       el.addEventListener("input", () => {
-        let restAmount = parseFloat(document.getElementById(array[1]).value);
-        val = isNaN(valor) ? 0 : initialAmount;
-        val =
-          parseFloat(initialAmount.value) -
-          (isNaN(parseFloat(restAmount)) ? 0 : parseFloat(restAmount));
-        out.textContent = `The rest amount is: ${val.toFixed(2)}`;
+        calculus(arrayMod, arrayStatic, output);
       });
     });
-  }}
-//----------------------------------------------
+  } else {
+    arrayStatic.forEach(function (ar) {
+      const el = document.getElementById(ar);
+      el.addEventListener("input", () => {
+        calculus(arrayMod, arrayStatic, output);
+      });
+    });
+  }
+}
 
-//------------------------------
-const addButton = document.getElementById("addInputGroup");
-var i = 0;
-const elements = ["amount", "amount-0"];
-const output = document.getElementById("output");
-const initialAmount = document.getElementById(elements[0]);
-var valor = 0;
-actualvalue(elements,output,valor)
+function calculus(arrayMod, arrayStatic, output) {
+  let sum = 0;
+  let rest = 0;
+  let sumMod = 0;
+  let restMod = 0;
+  let totalValue = 0;
+  for (let i = 0; i < arrayMod.length; i++) {
+    sumMod = parseFloat(document.getElementById(arrayMod[i]).value);
+    let initialAmount = isNaN(sumMod) ? 0 : sumMod;
+    sum += initialAmount;
+  }
+  for (let i = 0; i < arrayStatic.length; i++) {
+    restMod = parseFloat(document.getElementById(arrayStatic[i]).value);
+    let restAmount = isNaN(restMod) ? 0 : restMod;
+    rest += restAmount;
 
-addButton.addEventListener("click", () => {
-  i++;
-  const newElement = `amount-${i}`;
-  elements.push(newElement);
+    totalValue = sum - rest;
 
-  createField(
-    "cont1",
-    "Dist",
-    "cont2",
-    "cont3",
-    "amount",
-    "cont4",
-    "delete",
-    i,
-    distribution,
-    elements,
-    valor,
-    output
-  );
-  setListener(elements, output);
-});
+    output.textContent = `The rest amount is: ${totalValue.toFixed(2)}`;
+  }
+}
 
-//-------------------second part location of the money
+//-------------------location of the money
 const addButtonb = document.getElementById("addLocGroup");
-var j = 0;
-const elementsb = ["amount", "amountB-0"];
-const outputB = document.getElementById("outputB");
-const initialAmountb = document.getElementById(elementsb[0]);
-var valorb = 0;
-actualvalue(elementsb,outputB,valorb)
+const addButton = document.getElementById("addInputGroup");
+
+const locationAr = ["amountB-0"];
+const distributionAr = ["amount-0"];
+const output = document.getElementById("output");
+let j = 0;
+let i = 0;
+actualvalue(locationAr, distributionAr, output, i, true);
+actualvalue(locationAr, distributionAr, output, i, false);
 
 addButtonb.addEventListener("click", () => {
   j++;
-
   const newElementb = `amountB-${j}`;
-  elementsb.push(newElementb);
+  locationAr.push(newElementb);
 
   createField(
     "container1",
@@ -193,11 +163,32 @@ addButtonb.addEventListener("click", () => {
     "deletedb",
     j,
     distributionb,
-    elementsb,
-    valorb,
-    outputB
+    locationAr,
+    output,
+    distributionAr
   );
-
-  setListener(elementsb, outputB);
+  actualvalue(locationAr, distributionAr, output, j, true);
 });
 
+//-------------------Distribution of the money
+addButton.addEventListener("click", () => {
+  i++;
+  const newElement = `amount-${i}`;
+  distributionAr.push(newElement);
+
+  createField(
+    "cont1",
+    "Dist",
+    "cont2",
+    "cont3",
+    "amount",
+    "cont4",
+    "delete",
+    i,
+    distribution,
+    distributionAr,
+    output,
+    locationAr
+  );
+  actualvalue(locationAr, distributionAr, output, i, false);
+});

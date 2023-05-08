@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const updatelocations = document.querySelectorAll('.updateLocations');
 const locss = {};
+var idd = 0;
 updatelocations.forEach(function (updateLocation) {
     updateLocation.addEventListener('click', function() {
         document.querySelectorAll('input[data-loc-id]').forEach(function(el) {
@@ -28,16 +29,19 @@ updatelocations.forEach(function (updateLocation) {
             const value = el.value;
             if (accID === buttonID) {
               locss[loc] = value;
+              idd = buttonID
           }
+          
             
         });
-        
+        console.log(idd)
         $.ajax({
             url: '/update_account',
             type: 'POST',
             data: {
                 csrf_token: $('input[name="csrf_token"]').val(),
                 loc_data: JSON.stringify(locss),
+                account_id: parseInt(idd)
             },
             success: function(response) {
                 console.log(response.message);

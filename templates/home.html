@@ -12,13 +12,13 @@
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Overview</a></li>
-        <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
-        <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
+        <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Add Transaction</a></li>
+        <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-body-emphasis">Account Details</a></li>
         {% if accounts|length < 3 %} <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add
             Account</a></li>
           {% endif %}
       </ul>
-      <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Bienvenido {{ current_user.fullname
+      <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Welcome {{ current_user.fullname
         }} </h8>
       <a class="btn btn-outline-primary me-2" href="{{ url_for('logout') }}">Logout</a>
 
@@ -43,7 +43,7 @@
           <div class="p-1 d-flex flex-column position-static">
             {% for total in totals %}
             {% if total.accountid == account.id %}
-            <p class="mb-0 text-white-50">TOTAL IN ACCOUNT: {{ account.currency }}{{ total.total }}</p>
+            <p class="mb-0 text-white-50">This should be Zero: {{ account.currency }}{{ total.total }}</p>
             {% endif %}
             {% endfor %}
             <div class="text-white">Last Update {{ account.datemodified.strftime('%d/%m/%Y') }} {{
@@ -52,7 +52,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="card text-bg-dark border rounded p-1">
-                  <h5 class="card-header text-center">LOCATIONS</h5>
+                  <h5 class="card-header text-center">Bank Distribution</h5>
                   {% for loca in locs %}
                   {% if loca.accountid == account.id %}
                   <div class="card-body p-1 text-center">
@@ -73,7 +73,7 @@
               </div>
               <div class="col-md-6">
                 <div class="card border text-bg-dark rounded">
-                  <h5 class="card-header text-center">Holding
+                  <h5 class="card-header text-center">Division of Money
                   </h5>
                   {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}

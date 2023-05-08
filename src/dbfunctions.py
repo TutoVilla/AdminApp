@@ -143,7 +143,24 @@ class DbFunctions():
             raise Exception(ex)
 
     @classmethod
-    def update_location(cls, db, loc_dict):
+    def update_location(cls, db, loc_dict, accountid):
+        try:
+            cursor = db.cursor()
+            cursor.execute('START TRANSACTION')
+            for loc_id, amount in loc_dict.items():
+                sql = 'UPDATE location SET amount = %s, datemodified = NOW() WHERE iddistribution = %s'
+                cursor.execute(sql, (float(amount), int(loc_id)))
+            sql = 'UPDATE account SET datemodified = NOW() WHERE idaccount = %s'
+            cursor.execute(sql, (accountid,))
+            
+            db.commit()    
+            
+        except Exception as ex:
+            db.rollback()
+            raise Exception(ex)
+        
+    @classmethod
+    def update_distribution(cls, db, id_dist):
         try:
             cursor = db.cursor()
             cursor.execute('START TRANSACTION')

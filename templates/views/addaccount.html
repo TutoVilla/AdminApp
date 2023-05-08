@@ -2,144 +2,130 @@
 
 {% block header %}
 <header class="p-3 mb-3 border-bottom">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-        </a>
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+          <use xlink:href="#bootstrap" />
+        </svg>
+      </a>
 
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-body-emphasis">Overview</a></li>
-          <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
-          <li><a href="#" class="nav-link px-2 link-body-emphasis">Spare</a></li>
-          <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-secondary">Add Account</a></li>
-        </ul>
-        <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap" >Bienvenido {{ current_user.fullname }}  </h8>  
-        <a class="btn btn-outline-primary me-2"  href="{{ url_for('logout') }}">Logout</a>
-        
-          </ul>
-        </div>
-      </div>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-body-emphasis">Overview</a></li>
+        <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Add Transaction</a></li>
+        <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-body-emphasis">Account Details</a></li>
+        {% if accounts|length < 3 %} <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-secondary">Add
+            Account</a></li>
+          {% endif %}
+      </ul>
+      <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Welcome {{ current_user.fullname
+        }} </h8>
+      <a class="btn btn-outline-primary me-2" href="{{ url_for('logout') }}">Logout</a>
+
+      </ul>
     </div>
-  </header>
+  </div>
+  </div>
+</header>
 <div class="b-example-divider"></div>
 {% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center">
-  <div class="container my-5">
-    <div class="bg-secondary text-light py-3">
-        <h3 class="text-center">Create New Account</h3>
-    </div>
-    <form action="/addact" method="POST" >
-     <!--First Block-->
-      <div class="bg-light py-2 my-2">
-        <div class="container">
-          <div class="row col-12 d-flex justify-content-center align-items-center">
-            <div class="col-3">
-              <p class="font-weight-bold">Currency Type:</p>
-            </div>
-            <div class="col-3"> 
-
-              <select class="form-control" name="currency_type" id="currency_type" placeholder="currency_type" required>
-                <option value="..." selected>Select</option>
-                {% if '$' not in accounts %}
-                  <option value="$">$ Dolars</option>
-                {% endif %}
-                {% if '£' not in accounts %}
-                  <option value="£">£ Pounds</option>
-                {% endif %}
-                {% if '€' not in accounts %}
-                  <option value="€">€ Euros</option>
-                {% endif %}
-              </select>                   
-              </div>
-              <div class="col-3">
-                <p class="font-weight-bold">Amount:</p>
-              </div>
-              <div class="col-3">
-                <div class="input-group">
-                  <input type="number" step="0.01" class="form-control" 
-                  placeholder="0.00" aria-label="amount" name="amount" id="amount" placeholder="amount" min='0' required>
-                    <div class="input-group-append">
-                      <span class="input-group-text input-group-append" id="currency_symbol">...</span>
-                    </div>
-                </div>
-              </div>
-            </div>
+<div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
+  <h3>NEW ACCOUNT</h3>
+</div>
+<div>
+<form action="/addact" method="POST">
+  <!--First Block-->
+  <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
+        <div class="col-3">
+          <p class="font-weight-bold">Currency Type:</p>
         </div>
-      </div>
-      <!--Second Block-->
-        <div class="bg-light py-2 my-2">
-          <div class="container">
-            <div class="row col-12 d-flex justify-content-center align-items-center">
-              <div class="col-12">
-                <h4 class="font-weight-bold">Distribution</h4>
-                <div id="output"></div>
-              
-                <br>
-              </div>
-              <div class="row col-12">
-                  <div class="col-4">
-                    <input type="text" class="form-control" placeholder="Input" aria-label="Dist-0" name="Dist-0" id="Dist-0" required>
-                  </div>
-                  <div class="col-3">
-                    <p class="font-weight-bold">Amount:</p>
-                  </div>
-                  <div class="col-3">
-                    <input type="number" step="0.01" class="form-control" 
-                    placeholder="0.00" aria-label="amount-0" name="amount-0" id="amount-0" required>
-                    
-                  </div>
-                  <div class="col-2"></div>
-              </div>
-            
-                <!--New Inputs blow-->
-                <div class='row col-12' id="distribution"></div>
-                <button class=" col-6 btn btn-outline-primary my-2" id="addInputGroup" type="button">Add field</button>
-              </div>
-          </div>
+        <div class="col-3">
+          <select class="form-control" name="currency_type" id="currency_type" placeholder="currency_type" required>
+            <option value="..." selected>Select</option>
+            {% if '$' not in accounts %}
+            <option value="$">$ Dolars</option>
+            {% endif %}
+            {% if '£' not in accounts %}
+            <option value="£">£ Pounds</option>
+            {% endif %}
+            {% if '€' not in accounts %}
+            <option value="€">€ Euros</option>
+            {% endif %}
+          </select>
         </div>
-<!--Third Block-->
-<div class="bg-light py-2 my-2">
-  <div class="container">
-    <div class="row col-12 d-flex justify-content-center align-items-center">
-      <div class="col-12">
-        <h4 class="font-weight-bold">Location</h4>
-        <div id="outputB"></div>
-
-        <br>
-      </div>
-      <div class="row col-12">
-          <div class="col-4">
-            <input type="text" class="form-control" placeholder="Input" aria-label="loc-0" name="loc-0" id="loc-0" required>
-          </div>
-          <div class="col-3">
-            <p class="font-weight-bold">Amount:</p>
-          </div>
-          <div class="col-3">
-            <input type="number" step="0.01" class="form-control" 
-            placeholder="0.00" aria-label="amountB-0" name="amountB-0" id="amountB-0" required>
-            
-          </div>
-          <div class="col-2"></div>
-      </div>
-
-        <div class='row col-12' id="distributionb"></div>
-        <button class=" col-6 btn btn-outline-primary my-2" id="addLocGroup" type="button">Add field</button>
-      </div>
-  </div>
-</div>    
-
-
-      <div class="container text-center">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-primary" id="submit_button">Create Account</button>
-      </div>  
-    </form>
-      
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-      <script src="static/js/addaccount.js"></script>
-  </div> 
   
+  </div>
+  <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center" id="output"></div>
+  <!--Second Block-->
+  
+
+    <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
+      <div class="col-12">
+        <h4>Bank Distribution</h4>
+      </div>
+      <div class="row justify-content-end">
+      <div class="row col-12 justify-content-center align-items-center" id="distributionb">
+        <div class="col-4">
+          <input type="text" class="form-control" placeholder="Input" aria-label="loc-0" name="loc-0" id="loc-0"
+            required>
+        </div>
+        <div class="col-3">
+          <p class="font-weight-bold">Amount:</p>
+        </div>
+        <div class="col-4">
+          <input type="number" step="0.01" class="form-control" placeholder="0.00" aria-label="amountB-0"
+            name="amountB-0" id="amountB-0" required>
+          <div class="col-2"></div>
+        </div>
+        <div class="col-1"></div>
+        
+      </div>
+      <button class=" col-2 btn btn-outline-primary m-2" id="addLocGroup" type="button">Add field</button>
+    </div>
+  </div>
+
+  <!--Third Block-->
+  
+
+    <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
+      <div class="col-12">
+        <h4>Division of Money</h4>
+      </div>
+      <div class="row justify-content-end">
+      <div class="row col-12 justify-content-center align-items-center" id='distribution'>
+        <div class="col-4">
+          <input type="text" class="form-control" placeholder="Input" aria-label="Dist-0" name="Dist-0" id="Dist-0"
+            required>
+        </div>
+        <div class="col-3">
+          <p class="font-weight-bold">Amount:</p>
+        </div>
+        <div class="col-4">
+          <input type="number" step="0.01" class="form-control" placeholder="0.00" aria-label="amount-0" name="amount-0"
+            id="amount-0" required>
+            <div class="col-2"></div>
+        </div>
+        <div class="col-1"></div>
+
+
+        <!--New Inputs blow-->
+        
+      </div>
+      <button class=" col-2 btn btn-outline-primary m-2" id="addInputGroup" type="button">Add field</button>
+    </div>
+  </div>
+
+
+  <div class="container text-center">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-primary" id="submit_button">Create Account</button>
+  </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="static/js/addaccount.js"></script>
+</div>
+
 {% endblock %}

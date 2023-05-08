@@ -85,7 +85,8 @@ def signup():
             return render_template('auth/signup.html')
 
         result = ModelUser.new_user(db, newUser)
-        print(result)
+        
+        
         if type(result) == bool:
             return render_template('auth/login.html')
         else:
@@ -151,7 +152,7 @@ def addact():
                 currencies.append(account.currency)
         return render_template('views/addaccount.html', accounts=currencies)
     elif request.method == 'POST':
-        inicialAmount = request.form['amount']
+        inicialAmount = 0
         currency = request.form['currency_type']
         now = datetime.datetime.now()
         date = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -222,13 +223,63 @@ def update_account():
         abort(400, 'Token CSRF inválido')
     loc_data = request.form.get('loc_data')
     loc_dict = json.loads(loc_data)
-    id
-
-    DbFunctions.update_location(db, loc_dict)
+    idaccount = request.form.get('account_id')
+    id = int(idaccount)
+    
+    DbFunctions.update_location(db, loc_dict, id)
 
     return jsonify({'message': 'Location updated successfully'})
 
+@app.route('/addtransaction', methods=['GET','POST'])
+@login_required
+def addtransaction():
+    accounts = DbFunctions.get_accounts(db, current_user.id)
+    if request.method == 'GET':
+        return render_template('views/addtransaction.html', accounts = accounts)
+    
+    
+@app.route('/selectaccount', methods=['POST'])
+@login_required
+def selectaccount():
+    csrf_token = request.form.get('csrf_token')
+    try:
+        validate_csrf(csrf_token)
+    except ValidationError:
+        abort(400, 'Token CSRF inválido')
+    id = int(request.form.get('id'))
+    
+    
+    accounts = DbFunctions.get_account(db, id)
+    totalDst = 0
+    totalLoc = 0
+    dstr = {}
+    dst = DbFunctions.get_distribution(db, id)
+    loca = DbFunctions.get_location(db, id)
+    dateupdated = accounts.datemodified
 
+    
+    for i in dst:
+        dstr[i.name]=i.amount
+        totalDst += i.amount
+    for j in loca:
+        totalLoc += j.amount
+    total = round(float((totalLoc - totalDst)), 2)
+    object = {
+        'total': total,
+        'id': id,
+        'lastupdate': dateupdated,
+        'holders': dstr
+    }
+    return jsonify(object)
+
+@app.route('/accountdetails', methods=['GET','POST'])
+@login_required
+def accountdetails():
+    accounts = DbFunctions.get_accounts(db, current_user.id)
+    return render_template('views/accountdetails.html')
+
+
+    
 def status_401(error):
     return redirect(url_for('login'))
 
