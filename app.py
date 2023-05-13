@@ -237,6 +237,14 @@ def addtransaction():
     if request.method == 'GET':
         return render_template('views/addtransaction.html', accounts = accounts)
     
+    else:
+        csrf_token = request.form.get('csrf_token')
+    try:
+        validate_csrf(csrf_token)
+    except ValidationError:
+        abort(400, 'Token CSRF inválido')
+    print(request.form.get('id'))
+    return render_template('views/addtransaction.html')
     
 @app.route('/selectaccount', methods=['POST'])
 @login_required
@@ -268,7 +276,8 @@ def selectaccount():
         'total': total,
         'id': id,
         'lastupdate': dateupdated,
-        'holders': dstr
+        'holders': dstr,
+        'currency': accounts.currency
     }
     return jsonify(object)
 
