@@ -243,7 +243,9 @@ def addtransaction():
         validate_csrf(csrf_token)
     except ValidationError:
         abort(400, 'Token CSRF inválido')
-    print(request.form.get('id'))
+    a = json.loads(request.form.get('holders_Key'))
+    b = request.form.get('id')
+    print(b)
     return render_template('views/addtransaction.html')
     
 @app.route('/selectaccount', methods=['POST'])
@@ -255,29 +257,31 @@ def selectaccount():
     except ValidationError:
         abort(400, 'Token CSRF inválido')
     id = int(request.form.get('id'))
-    
-    
     accounts = DbFunctions.get_account(db, id)
     totalDst = 0
     totalLoc = 0
     dstr = {}
+    iddstr = {}
     dst = DbFunctions.get_distribution(db, id)
     loca = DbFunctions.get_location(db, id)
     dateupdated = accounts.datemodified
-
-    
+    descriptions = DbFunctions.get_descriptions(db)
     for i in dst:
         dstr[i.name]=i.amount
+        iddstr[i.name]=i.iddistribution
         totalDst += i.amount
     for j in loca:
         totalLoc += j.amount
     total = round(float((totalLoc - totalDst)), 2)
+    
     object = {
         'total': total,
         'id': id,
         'lastupdate': dateupdated,
         'holders': dstr,
-        'currency': accounts.currency
+        'idholders': iddstr,
+        'currency': accounts.currency,
+        'descriptions': descriptions
     }
     return jsonify(object)
 

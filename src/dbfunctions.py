@@ -171,6 +171,18 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        
+    @classmethod
+    def get_descriptions(cls,db):
+        try:
+            cursor = db.cursor()
+            sql = 'SELECT * from descriptions'
+            cursor.execute(sql)
+            descr = cursor.fetchall()
+            return descr
+        except Exception as ex:
+            db.rollback()
+            raise Exception(ex)
 
 
 

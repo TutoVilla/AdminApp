@@ -8,18 +8,18 @@ function createElement(type, classes) {
   return element;
 }
 
-
-
-function addevent(input, holdersKey, currency){
+function addevent(input, holdersKey, currency) {
   currency = currency;
-  input.addEventListener('change', () => {
+
+  input.addEventListener("change", () => {
     let value = 0;
-    holdersKey.forEach(element => {
-      el = parseFloat(document.getElementById(element).value);
-      let sum = isNaN(el) ? 0 : el;
+    holdersKey.forEach((element) => {
+      el = document.getElementById(element).value;
+      ele = parseFloat(el);
+      let sum = isNaN(ele) ? 0 : ele;
       value += sum;
+      console.log(value);
     });
-    console.log(value)
     updateTotal(value, currency);
   });
 }
@@ -30,7 +30,6 @@ function updateTotal(value, currency) {
   totalFrase.textContent = "This Should be Zero: " + currency + updatedValue;
 }
 
-  
 total = 0;
 holdersKey = [];
 const selector = document.getElementById("accountSelected");
@@ -44,6 +43,7 @@ selector.addEventListener("change", () => {
       id: parseInt(id),
     },
     success: function (response) {
+      descr = (response.descriptions)
       holdersKey = [];
       total = response.total;
       const p_1 = document.createElement("p");
@@ -58,9 +58,9 @@ selector.addEventListener("change", () => {
       actualaccount.appendChild(p_2);
 
       showholders.innerHTML = "";
-      
+      var indexKey = 0;
       for (var key in response.holders) {
-        
+        const holder = response.idholders[key];
         if (response.holders.hasOwnProperty(key)) {
           var value = response.holders[key];
           const div1 = createElement("div", [
@@ -82,39 +82,87 @@ selector.addEventListener("change", () => {
             "rounded",
             "p-1",
             "m-1",
-          ])
-          div2.setAttribute('id','body-'+key);
-          const input = document.createElement("input");
-          const index = 0
+          ]);
+          div2.setAttribute("id", "body-" + holder);
+          const input = document.createElement("input", [
+            "form-control",
+            "m-2",
+            "p-2",
+          ]);
           input.setAttribute("type", "number");
           input.setAttribute("step", "0.01");
-          input.setAttribute("class", "form-control");
+          input.setAttribute("value", "0.00");
           input.setAttribute("placeholder", "0.00");
-          input.setAttribute("id", key + "-"+index);
-          input.setAttribute("data-key",key);
+          input.setAttribute("id", holder + "-" + indexKey);
+          input.setAttribute("data-key", holder);
 
-          const addfield= createElement("button", ['col-6', 'btn', 'btn-outline-primary', 'm-2']);
+          const description = document.createElement("select", ['p-2','m-2','form-control'])
+          description.setAttribute("id", 'desc-'+indexKey);
+          for (var i = 0; i < descr.length; i++) {
+            var option = document.createElement("option");
+            option.setAttribute("value", descr[i][0]);
+            option.textContent = descr[i][1];
+            description.appendChild(option);
+          }
+          
+          const textInput = document.createElement("input", ['p-2','m-2','form-control']);
+          textInput.setAttribute("type", "text");
+          textInput.setAttribute("placeholder", "Description");
+          const br = document.createElement("br")
+          const addfield = createElement("button", [
+            "col-6",
+            "btn",
+            "btn-outline-primary",
+            "m-2",
+          ]);
           addfield.setAttribute("type", "button");
-          addfield.textContent = "Add Transaction"
-          addfield.setAttribute('id',key)
-          addfield.setAttribute("data-key",key)
+          addfield.textContent = "Add Transaction";
+          addfield.setAttribute("id", holder);
+          addfield.setAttribute("data-key", holder);
 
-          addfield.addEventListener("click", () =>{
-            idbutton = addfield.getAttribute("data-key")
-            const input = document.createElement("input");
-           
-            const index = holdersKey.length + 1
-            holdersKey.push(idbutton+'-'+index);
+          addfield.addEventListener("click", () => {
+            idbutton = addfield.getAttribute("data-key");
+            const input = document.createElement("input", [
+              "form-control",
+              "m-2",
+              "p-2",
+            ]);
+
+            holdersKey.push(idbutton + "-" + indexKey);
             input.setAttribute("type", "number");
             input.setAttribute("step", "0.01");
-            input.setAttribute("class", "form-control");
+            input.setAttribute("value", "0.00");
             input.setAttribute("placeholder", "0.00");
-            input.setAttribute("id", idbutton+"-"+index)
-            div = document.getElementById('body-'+idbutton)
-            div.appendChild(input)
-            addevent(input,holdersKey,response.currency)        
-          })
+            input.setAttribute("id", idbutton + "-" + indexKey);
+            input.setAttribute("data-key", idbutton);
+            div = document.getElementById("body-" + idbutton);
+            
+            const description = document.createElement("select", ['p-2','m-2','form-control']);
+            description.setAttribute("id", 'desc-' + indexKey);
+            
           
+            for (var i = 0; i < descr.length; i++) {
+              var option = document.createElement("option");
+              option.setAttribute("value", descr[i][0]);
+              option.textContent = descr[i][1];
+              description.appendChild(option);
+            }
+
+            const textInput = document.createElement("input", ['p-2','m-2','form-control']);
+            textInput.setAttribute("type", "text");
+            textInput.setAttribute("placeholder", "Description");
+            textInput.setAttribute("id", 'desc-' + indexKey)
+            
+            const br = document.createElement("br")
+
+            div.appendChild(input);
+            div.appendChild(description);
+            div.appendChild(textInput);
+            div.appendChild(br);
+            indexKey++;
+            addevent(input, holdersKey, response.currency);
+          });
+
           p1.textContent = key;
           p2.textContent = response.currency + value;
 
@@ -123,34 +171,54 @@ selector.addEventListener("change", () => {
           div1.appendChild(hr1);
 
           div2.appendChild(input);
+          div2.appendChild(description);
+          div2.appendChild(textInput);
+          div2.appendChild(br);
           div1.appendChild(div2);
           div1.appendChild(addfield);
 
           showholders.appendChild(div1);
 
-          holdersKey.push(key+'-'+index);
-          addevent(input, holdersKey, response.currency)
+          holdersKey.push(holder + "-" + indexKey);
+          addevent(input, holdersKey, response.currency);
+          indexKey++;
         }
       }
 
-      const update = createElement('button', ['btn', 'btn-primary'])
+      const update = createElement("button", ["btn", "btn-primary"]);
       update.setAttribute("type", "button");
-      update.setAttribute("id", 'updateButton');
+      update.setAttribute("id", "updateButton");
+      update.setAttribute("data-key", id)
       update.textContent = "UPDATE";
+      
       update.addEventListener("click", () => {
-        
+        var holdersDic = {};
+
+        for (var i = 0; i < holdersKey.length; i++) {
+          var key = holdersKey[i].split("-")[0];
+          var id = holdersKey[i]; //
+          var element = document.getElementById(id);
+          var value = parseFloat(element.value);
+          if (holdersDic[key]) {
+            holdersDic[key].push(value);
+          } else {
+            holdersDic[key] = [value];
+          }
+        }
+
         $.ajax({
           url: "/addtransaction",
           type: "POST",
           data: {
             csrf_token: $('input[name="csrf_token"]').val(),
-            id: 'hola mundo',
+            id: (update.getAttribute('data-key')),
+            holders_Key: JSON.stringify(holdersKey),
           },
-      })
-      })
-      showholders.appendChild(update)
+        });
+      });
+      showholders.appendChild(update);
     },
 
-    error: function (error) {}, 
+    error: function (error) {},
   });
 });
