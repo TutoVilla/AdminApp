@@ -109,6 +109,7 @@ def logout():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+    
     accounts = DbFunctions.get_accounts(db, current_user.id)
     if request.method == 'GET':
 
@@ -133,11 +134,12 @@ def home():
                 total = Total(
                     round(float((totalLoc - totalDst)), 2), account.id)
                 totals.append(total)
-
         return render_template('home.html', accounts=accounts, dsrts=dstrs, locs=locs, totals=totals)
 
-    elif request.method == 'POST':
-        return render_template(url_for('home'))
+    elif request.method == 'POST':    
+        
+        return render_template('home.html') 
+       
 
 
 @app.route('/addact', methods=['GET', 'POST'])
@@ -236,17 +238,28 @@ def addtransaction():
     accounts = DbFunctions.get_accounts(db, current_user.id)
     if request.method == 'GET':
         return render_template('views/addtransaction.html', accounts = accounts)
-    
     else:
         csrf_token = request.form.get('csrf_token')
-    try:
-        validate_csrf(csrf_token)
-    except ValidationError:
-        abort(400, 'Token CSRF inválido')
-    a = json.loads(request.form.get('holders_Key'))
-    b = request.form.get('id')
-    print(b)
-    return render_template('views/addtransaction.html')
+        try:
+            validate_csrf(csrf_token)
+        except ValidationError:
+            abort(400, 'Token CSRF inválido')
+        data = json.loads(request.form.get('holders_Values'))
+        datalist = []
+        for key, values_list in data.items():
+            new_key = int(key)
+            for value_dict in values_list:
+                new_list = []
+                for val, lst in value_dict.items():
+                    val_float = round(float(val), 2)
+                    val_int = int(lst[0])
+                    val_str = lst[1]
+                    new_list = [new_key, val_float, val_int, val_str]
+                    datalist.append(new_list)
+
+        DbFunctions.update_registers(db, datalist)
+        response = {'message': 'Actualización exitosa'}
+        return jsonify(response)
     
 @app.route('/selectaccount', methods=['POST'])
 @login_required

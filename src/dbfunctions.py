@@ -1,5 +1,6 @@
 from models.entities.accounts import Account, Distribution, Location
-
+import datetime
+import decimal
 
 class DbFunctions():
 
@@ -184,6 +185,46 @@ class DbFunctions():
             db.rollback()
             raise Exception(ex)
 
+    @classmethod
+    def update_registers(cls,db,list_of_lists):
+        try:
+            cursor = db.cursor()
+            # Conexión a la base de datos MySQL
+            cursor = db.cursor()
+
+            for sublist in list_of_lists:
+                distributionid, register, description, comment = sublist
+
+                # Paso 2: Obtener el idregisters máximo para el distributionid dado
+                query = "SELECT MAX(idregisters) FROM registers WHERE distributionid = %s"
+                cursor.execute(query, (distributionid,))
+                result = cursor.fetchone()
+                max_idregisters = result[0] if result[0] else 0
+
+                # Paso 3: Obtener el total del registro anterior
+                query = "SELECT total FROM registers WHERE idregisters = %s"
+                cursor.execute(query, (max_idregisters,))
+                result = cursor.fetchone()
+                totaltemp = result[0] if result else 0
+
+                # Paso 4: Insertar un nuevo registro en la tabla registers
+                now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                register_decimal = decimal.Decimal(str(register))
+                totaltemp += register_decimal
+                query = "INSERT INTO registers (distributionid, register, total, datecreated, description, comment) VALUES (%s, %s, %s, %s, %s, %s)"
+                values = (distributionid, register, totaltemp, now, description, comment)
+                cursor.execute(query, values)
+
+                # Paso 5: Actualizar la tabla distribution
+                query = "UPDATE distribution SET amount = %s, datemodified = %s WHERE iddistribution = %s"
+                values = (totaltemp, now, distributionid)
+                cursor.execute(query, values)
+
+            # Realizar el commit
+            db.commit()
+
+        except Exception as ex:
+            db.rollback()
+            raise Exception(ex)
 
 
-    

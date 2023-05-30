@@ -13,12 +13,13 @@ function addevent(input, holdersKey, currency) {
 
   input.addEventListener("change", () => {
     let value = 0;
+    let array1 = []
     holdersKey.forEach((element) => {
       el = document.getElementById(element).value;
       ele = parseFloat(el);
       let sum = isNaN(ele) ? 0 : ele;
       value += sum;
-      console.log(value);
+      array1.push(ele);
     });
     updateTotal(value, currency);
   });
@@ -97,7 +98,7 @@ selector.addEventListener("change", () => {
           input.setAttribute("data-key", holder);
 
           const description = document.createElement("select", ['p-2','m-2','form-control'])
-          description.setAttribute("id", 'desc-'+indexKey);
+          description.setAttribute("id", holder +'-desc-'+indexKey);
           for (var i = 0; i < descr.length; i++) {
             var option = document.createElement("option");
             option.setAttribute("value", descr[i][0]);
@@ -108,6 +109,7 @@ selector.addEventListener("change", () => {
           const textInput = document.createElement("input", ['p-2','m-2','form-control']);
           textInput.setAttribute("type", "text");
           textInput.setAttribute("placeholder", "Description");
+          textInput.setAttribute("id", "description-"+holder + "-" + indexKey);
           const br = document.createElement("br")
           const addfield = createElement("button", [
             "col-6",
@@ -138,7 +140,7 @@ selector.addEventListener("change", () => {
             div = document.getElementById("body-" + idbutton);
             
             const description = document.createElement("select", ['p-2','m-2','form-control']);
-            description.setAttribute("id", 'desc-' + indexKey);
+            description.setAttribute("id", idbutton + '-desc-' + indexKey);
             
           
             for (var i = 0; i < descr.length; i++) {
@@ -151,8 +153,8 @@ selector.addEventListener("change", () => {
             const textInput = document.createElement("input", ['p-2','m-2','form-control']);
             textInput.setAttribute("type", "text");
             textInput.setAttribute("placeholder", "Description");
-            textInput.setAttribute("id", 'desc-' + indexKey)
-            
+            textInput.setAttribute("id",  "description-"+idbutton+'-' + indexKey)
+             
             const br = document.createElement("br")
 
             div.appendChild(input);
@@ -196,16 +198,27 @@ selector.addEventListener("change", () => {
 
         for (var i = 0; i < holdersKey.length; i++) {
           var key = holdersKey[i].split("-")[0];
-          var id = holdersKey[i]; //
+          var id = holdersKey[i];
+          var slt = key + '-desc-' + i;
+          var dsc = 'description-' + id;
+          
+          var valslt = document.getElementById(slt).value;
+          var valdsc = document.getElementById(dsc).value;
+          var escapedValue = valdsc.replace(/</g, "&lt;").replace(/>/g, "&gt;");
           var element = document.getElementById(id);
-          var value = parseFloat(element.value);
+        
+          var val = parseFloat(element.value);
           if (holdersDic[key]) {
-            holdersDic[key].push(value);
+            if (Array.isArray(holdersDic[key])) {
+              holdersDic[key].push({[val.toString()]: [valslt, escapedValue]});
+            } else {
+              holdersDic[key] = [{[val.toString()]: [valslt, escapedValue]}];
+            }
           } else {
-            holdersDic[key] = [value];
+            holdersDic[key] = [{[val.toString()]: [valslt, escapedValue]}];
           }
+         
         }
-
         $.ajax({
           url: "/addtransaction",
           type: "POST",
@@ -213,7 +226,11 @@ selector.addEventListener("change", () => {
             csrf_token: $('input[name="csrf_token"]').val(),
             id: (update.getAttribute('data-key')),
             holders_Key: JSON.stringify(holdersKey),
+            holders_Values: JSON.stringify(holdersDic)
           },
+          success: function (response) {
+            window.location.href = "/home";
+        }
         });
       });
       showholders.appendChild(update);
