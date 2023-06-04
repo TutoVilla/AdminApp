@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<header class="p-3 mb-3 border-bottom">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+          <use xlink:href="#bootstrap" />
+        </svg>
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-body-emphasis">Overview</a></li>
+        <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Add Transaction</a></li>
+        <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-secondary">Account Details</a></li>
+        {% if accounts|length < 3 %} <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add
+            Account</a></li>
+          {% endif %}
+      </ul>
+      <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Welcome {{ current_user.fullname
+        }} </h8>
+      <a class="btn btn-outline-primary me-2" href="{{ url_for('logout') }}">Logout</a>
+
+      </ul>
+    </div>
+  </div>
+  </div>
+</header>
+<div class="b-example-divider"></div>
+{% endblock %}
+
+{% block body %}
+<div class="col-12 card bg-dark text-white p-2" style="border-radius: 1rem">
+  <form class="row justify-content-center" action="/addtransaction" method="POST">
+    <div class="border rounded col-4 p-2">
+      <p class="font-weight-bold">Select Account:</p>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <select class="p-2 card-body form-control" name="accountSelected" id="accountSelected"
+        placeholder="Account to Select" required>
+        <option value="..." selected>Select</option>
+        {% for account in accounts %}
+        <option value="{{ account.id|string }}" {% if showaccount==account.id|string %}{% endif %}>{{ account.currency
+          }}</option>
+        {% endfor %}
+      </select>
+    
+
+    </div>
+ 
+    <div class="border rounded col-4 p-2" id="actualaccount">
+      <p class="font-weight-bold">Select holder:</p>
+      <select class="p-2 card-body form-control" name="accountSelected" id="accountSelected"
+        placeholder="Account to Select">
+        <option value="..." selected>Select</option>
+    </div>
+  </form>
+  
+</div>
+
+{% endblock %}
