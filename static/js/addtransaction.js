@@ -114,7 +114,6 @@ selector.addEventListener("change", () => {
             "id",
             "description-" + holder + "-" + indexKey
           );
-          const br = document.createElement("br");
           const addfield = createElement("button", [
             "col-6",
             "btn",
@@ -176,7 +175,6 @@ selector.addEventListener("change", () => {
             div.appendChild(br);
             indexKey++;
             addevent(input, holdersKey, response.currency);
-            
           });
 
           p1.textContent = key;
@@ -259,16 +257,16 @@ selector.addEventListener("change", () => {
       showholders.appendChild(update);
 
       //_________---------------______________
-      const detailDiv1 = document.createElement("div",[]);
+      const detailDiv1 = document.createElement("div", []);
       detailDiv1.setAttribute("class", "card-header border rounded p-1");
- 
+
       const detailList = document.createElement("select", []);
       detailList.setAttribute("id", "-list");
       detailList.setAttribute("class", "from-select col-12 p-2");
       const options = document.createElement("option");
-          options.setAttribute("value", '0');
-          options.textContent = 'Select to see details';
-          detailList.appendChild(options);
+      options.setAttribute("value", "0");
+      options.textContent = "Select to see details";
+      detailList.appendChild(options);
 
       for (const key in response.idholders) {
         if (response.idholders.hasOwnProperty(key)) {
@@ -279,8 +277,37 @@ selector.addEventListener("change", () => {
         }
       }
 
-      detailList.addEventListener("change",() =>{
-        var holderid = detailList.value
+      const detailDiv2 = document.createElement("div", []);
+      detailDiv2.setAttribute("class", "card-body border rounded p-1");
+      var table = document.createElement("table")
+      table.setAttribute("class", "table table-bordered table-dark table-responsive")
+
+      // Crea la fila de encabezado
+      var headerRow = document.createElement("tr");
+      var idHeader = document.createElement("th");
+      idHeader.textContent = "ID ";
+      headerRow.appendChild(idHeader);
+      var fechaHeader = document.createElement("th");
+      fechaHeader.textContent = "Date";
+      headerRow.appendChild(fechaHeader);
+      var negativeHeader = document.createElement("th");
+      negativeHeader.textContent = "Negative";
+      headerRow.appendChild(negativeHeader);
+      var positiveHeader = document.createElement("th");
+      positiveHeader.textContent = "Positive";
+      headerRow.appendChild(positiveHeader);
+      var totalHeader = document.createElement("th");
+      totalHeader.textContent = "Total";
+      headerRow.appendChild(totalHeader);
+      var commentHeader = document.createElement("th");
+      commentHeader.textContent = "Comment";
+      headerRow.appendChild(commentHeader);
+      table.appendChild(headerRow);
+
+      detailDiv2.appendChild(table);
+
+      detailList.addEventListener("change", () => {
+        var holderid = detailList.value;
         console.log(holderid);
         $.ajax({
           url: "/getdetails",
@@ -289,21 +316,47 @@ selector.addEventListener("change", () => {
             csrf_token: $('input[name="csrf_token"]').val(),
             holderid: parseInt(holderid),
           },
+
           success: function (response) {
-            console.log(response);
+            table.innerHTML = "";
             
+            table.appendChild(headerRow);
+
+            // Recorre los elementos de la lista y crea las filas de la tabla
+            response.forEach(function (item) {
+              var row = document.createElement("tr");
+              var idCell = document.createElement("td");
+              idCell.textContent = item.idregisters;
+              row.appendChild(idCell);
+              var fechaCell = document.createElement("td");
+              var fecha = new Date(item.datecreated);
+              fechaCell.textContent = fecha.toISOString().slice(0, 10);
+              row.appendChild(fechaCell);
+              var negativeCell = document.createElement("td");
+              negativeCell.textContent = item.register < 0 ? item.register : 0;
+              row.appendChild(negativeCell);
+              var positiveCell = document.createElement("td");
+              positiveCell.textContent = item.register > 0 ? item.register : 0;
+              row.appendChild(positiveCell);
+              var totalCell = document.createElement("td");
+              totalCell.textContent = item.total;
+              row.appendChild(totalCell);
+              var commentCell = document.createElement("td");
+              commentCell.textContent = item.comment;
+              row.appendChild(commentCell);
+              table.appendChild(row);
+            });
           },
+
           error: function (error) {},
+        });
+      });
 
-      })
-    })
+      detailDiv1.appendChild(detailList);
+
       
-      detailDiv1.appendChild(detailList)
-
-
-
       showdetails.appendChild(detailDiv1);
-
+      showdetails.appendChild(detailDiv2);
     },
 
     error: function (error) {},
