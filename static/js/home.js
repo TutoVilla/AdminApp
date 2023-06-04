@@ -53,4 +53,19 @@ updatelocations.forEach(function (updateLocation) {
         });
     });
 });
+
+function redirectToAddTransaction(accountID) {
+  window.location.href = "/addtransaction?showaccount=" + accountID;
+}
+
+const addtransaction = document.querySelectorAll(".addtransaction");
+  addtransaction.forEach((addtransaction) => {
+    addtransaction.addEventListener('click',() =>{
+      var accountID = addtransaction.getAttribute("data-account-id");
+      redirectToAddTransaction(accountID);
+    });
+  });
+
+  
+
 })

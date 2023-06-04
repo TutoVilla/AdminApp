@@ -31,32 +31,33 @@
 {% endblock %}
 
 {% block body %}
-<div class="col-12 card bg-dark text-white p-2 m-2" style="border-radius: 1rem">
+<div class="col-12 card bg-dark text-white p-2" style="border-radius: 1rem">
     <form class="row justify-content-center" action="/addtransaction" method="POST">
         <div class="card-header border rounded col-4 m-2 p-2">
         <p class="font-weight-bold">Select Account:</p>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <select class="p-2 card-body form-control" name="accountSelected" id="accountSelected" placeholder="Account to Select" required>
-            <option value="..." selected>Select</option>
+            <option value="..."selected>Select</option>
             {% for account in accounts %}
-            <option value="{{ account.id }}">{{ account.currency }}</option>
-            {% endfor %}
+            <option value="{{ account.id|string }}" {% if showaccount == account.id|string %}{% endif %}>{{ account.currency }}</option>
+        {% endfor %}  
         </select>
         
         
     </div>
-    <div class="border rounded col-4 m-2 p-2" id="actualaccount">
+    <div class="border rounded col-4 p-2" id="actualaccount">
         
     </div>
     
 </form>
 </div>
-   
+<hr>   
 
-<div>
-  <form class="row justify-content-center" action="/addtransaction" method="POST">
-    <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center" style="border-radius: 1rem" id="showholders">
-        
+<div class="col-12 card bg-dark text-white p-2 justify-content" style="border-radius: 1rem">
+  <form class="row justify-content" action="/addtransaction" method="POST">
+    <div class="col-6 card bg-dark text-white p-2" style="border-radius: 1rem"  id="showholders">
+    </div>
+    <div class="col-6 card bg-dark text-white p-2" style="border-radius: 1rem"  id="showdetails">
     </div>
   </form>
 </div>

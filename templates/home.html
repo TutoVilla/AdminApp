@@ -36,7 +36,7 @@
   {% if accounts|length != 0 %}
   <div class="row p-2">
     {% for account in accounts %}
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="card bg-dark text-white p-1 text-center" style="border-radius: 1rem">
         <h3 class="text-center mb-3">Account in {{ account.currency }}</h3>
         <div class="border rounded overflow-hidden flex-md-row shadow-sm h-md-250 position-relative">
@@ -55,7 +55,7 @@
                   <h5 class="card-header text-center">Bank Distribution</h5>
                   {% for loca in locs %}
                   {% if loca.accountid == account.id %}
-                  <div class="card-body p-1 text-center">
+                  <div class="card-body p-0 m-0 text-center">
                       <p class="mb-0 col-12">{{ loca.name }}</p>
                       <div class="input-group">
                         <span class="input-group-text col-1">{{ account.currency }}</span>
@@ -78,16 +78,15 @@
                   {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}
                   <div class="card-body p-1 text-center">
-                    <p class="mb-0 col-12">{{ dstr.name }}</p>
+                    <p class="p-0 m-0 col-12">{{ dstr.name }}</p>
                     <div class="input-group">
-                      <p class="input-group-text col-1">{{ account.currency }}</p>
-                      <p class="form-control col-10">{{ dstr.amount }}</p>
+                      <p class="input-group-text col-1 p-1 m-0">{{ account.currency }}</p>
+                      <p class="form-control col-10 p-1 m-0">{{ dstr.amount }}</p>
                     </div>
-                    <div class="input-group">
-                      <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">ADD TRANSACTION</button>
+                   <!-- <div class="input-group">
+                       <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">ADD TRANSACTION</button>
                       <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">VIEW DETAIL</button>
-                    </div>
-                    <hr>
+                    </div>-->
                   </div>
                   {% endif %}
                   {% endfor %}
@@ -98,6 +97,7 @@
             <hr>
           </div>
           <button class="btn btn-sm btn-danger deleteAccount" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
+          <button class="btn btn-sm btn-primary addtransaction" data-account-id="{{ account.id }}" id='addtransaction' onclick="redirectToAddTransaction('{{ account.id }}')">Add Transaction</button>
           <menu type="context">
           
         </div>

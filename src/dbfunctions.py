@@ -1,4 +1,4 @@
-from models.entities.accounts import Account, Distribution, Location
+from models.entities.accounts import Account, Distribution, Location, Register
 import datetime
 import decimal
 
@@ -165,7 +165,7 @@ class DbFunctions():
         try:
             cursor = db.cursor()
             cursor.execute('START TRANSACTION')
-            for loc_id, amount in loc_dict.items():
+            for loc_id, amount in id_dist.items():
                 sql = 'UPDATE location SET amount = %s, datemodified = NOW() WHERE iddistribution = %s'
                 cursor.execute(sql, (float(amount), int(loc_id)))
             cursor.execute('COMMIT')
@@ -188,8 +188,6 @@ class DbFunctions():
     @classmethod
     def update_registers(cls,db,list_of_lists):
         try:
-            cursor = db.cursor()
-            # Conexión a la base de datos MySQL
             cursor = db.cursor()
 
             for sublist in list_of_lists:
@@ -226,5 +224,42 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
-
-
+        
+    
+    @classmethod
+    def get_Details(cls, db, id):
+        try:
+            cursor = db.cursor()
+    
+            query = "SELECT * FROM registers WHERE distributionid = %s"
+            cursor.execute(query, (id,))
+            
+            results = cursor.fetchall()
+    
+            register_list = []
+    
+            for row in results:
+                idregisters = row[0]
+                register = float(row[2])
+                total = row[3]
+                datecreated = row[4]
+                description = row[5]
+                comment = row[6]
+    
+                register_obj = Register(idregisters, id, register, total, datecreated, description, comment)
+    
+                register_list.append(register_obj)
+    
+            
+            register_list.sort(key=lambda x: x.idregisters, reverse=True)
+    
+            return register_list
+    
+               
+        except Exception as ex:
+            db.rollback()
+            raise Exception(ex)
+        
+    
+    
+    

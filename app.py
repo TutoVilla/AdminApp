@@ -237,7 +237,8 @@ def update_account():
 def addtransaction():
     accounts = DbFunctions.get_accounts(db, current_user.id)
     if request.method == 'GET':
-        return render_template('views/addtransaction.html', accounts = accounts)
+        showaccount = request.args.get('showaccount', 0)
+        return render_template('views/addtransaction.html', accounts=accounts, showaccount=showaccount)
     else:
         csrf_token = request.form.get('csrf_token')
         try:
@@ -255,7 +256,8 @@ def addtransaction():
                     val_int = int(lst[0])
                     val_str = lst[1]
                     new_list = [new_key, val_float, val_int, val_str]
-                    datalist.append(new_list)
+                    if val_float != 0:
+                        datalist.append(new_list)
 
         DbFunctions.update_registers(db, datalist)
         response = {'message': 'Actualización exitosa'}
@@ -304,6 +306,23 @@ def accountdetails():
     accounts = DbFunctions.get_accounts(db, current_user.id)
     return render_template('views/accountdetails.html')
 
+
+@app.route('/getdetails', methods=['POST'])
+@login_required
+def getdetails():
+    csrf_token = request.form.get('csrf_token')
+    try:
+        validate_csrf(csrf_token)
+    except ValidationError:
+        abort(400, 'Token CSRF inválido')
+    holderId = int(request.form.get('holderid'))
+    accounts = DbFunctions.get_Details(db, holderId)
+    
+    # Convertir la lista de objetos Register en una lista de diccionarios
+    register_dict_list = [register.to_dict() for register in accounts]
+
+    
+    return jsonify(register_dict_list)
 
     
 def status_401(error):

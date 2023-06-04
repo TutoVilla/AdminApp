@@ -35,3 +35,24 @@ class Total():
     def __init__(self,total,accountid) -> None:
         self.total = total
         self.accountid = accountid
+        
+class Register():
+    def __init__(self, idregisters, distributionid, register, total, datecreated, description=int, comment=""):
+        self.idregisters = idregisters
+        self.distributionid = distributionid
+        self.register = register
+        self.total = total
+        self.datecreated = datecreated
+        self.description = description
+        self.comment = comment
+        
+    def to_dict(self):
+        return {
+            "idregisters": self.idregisters,
+            "distributionid": self.distributionid,
+            "register": self.register,
+            "total": self.total,
+            "datecreated": self.datecreated,
+            "description": self.description,
+            "comment": self.comment
+        }
