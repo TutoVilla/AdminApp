@@ -1,0 +1,10 @@
+db = mysql.connector.connect(
+        user = 'root',
+        password = 'ROOT',
+        host = 'db',
+        port = '3306',
+        database = 'db'
+    )
+
+    ENTRYPOINT ["python3"]
+CMD ["app.py"]
