@@ -1,0 +1,7 @@
+this is for commit and push changes on the brach tutovilla to origin.
+
+./Automatization/commit_and_push.sh
+
+
+this is for recreate the docker container 
+./Automatization/recreate_app.sh  
