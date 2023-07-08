@@ -4,5 +4,8 @@
 git fetch origin main
 git reset --hard origin/main
 
-# Actualizar la rama "ServerBranch" en el repositorio remoto
+# Actualizar la rama "ServerBranch" en el servidor remoto
 git pull origin ServerBranch
+
+# Actualizar la rama "ServerBranch" en el repositorio remoto
+git push origin ServerBranch
