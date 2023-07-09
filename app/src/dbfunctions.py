@@ -260,6 +260,17 @@ class DbFunctions():
             db.rollback()
             raise Exception(ex)
         
+        
+    @classmethod
+    def verify_email(cls, db, email):
+        try:
+            cursor = db.cursor()
+            sql = "SELECT EXISTS(SELECT 1 FROM login WHERE email = %s)"
+            cursor.execute(sql, (email,))
+            result = cursor.fetchone()[0]
+            return result
+        except Exception as ex:
+            raise Exception(ex)
     
     
     
