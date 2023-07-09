@@ -106,6 +106,39 @@ def signup():
 
     else:
         return render_template('auth/signup.html')
+ 
+ 
+#recovery password to be defined 
+    
+@app.route('/recovery', methods=['GET', 'POST'])
+def recovery():
+    if request.method == 'POST':
+        email = request.form['email']
+        print(email)
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_regex, email):
+            flash('Summit a valid Email')
+            return render_template('auth/recovery.html') 
+        else:
+            result = DbFunctions.verify_email(db, email)
+            if result:
+                return render_template('auth/login.html')
+            else:
+                flash('Email not registered')
+                return render_template('auth/recovery.html') 
+                    
+    else:
+        return render_template('auth/recovery.html')  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 @app.route('/logout')
