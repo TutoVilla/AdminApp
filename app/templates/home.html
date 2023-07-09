@@ -1,46 +1,45 @@
 {% extends "layout.html" %}
 
 {% block header %}
-<header class="p-3 mb-3 border-bottom">
+<header class="mb-3 border-bottom">
   <div class="container-fluid">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-          <use xlink:href="#bootstrap" />
-        </svg>
-      </a>
-
+    <div class="d-flex flex-wrap align-items-center justify-content-center mb-2">
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Overview</a></li>
-        <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Add Transaction</a></li>
-       <!-- <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-body-emphasis">Account Details</a></li>-->
-        {% if accounts|length < 3 %} <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add
-            Account</a></li>
-          {% endif %}
+        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Dashboard</a></li>
+
+        {% if accounts|length > 0 %}
+        <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Accounts</a></li>
+        <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-body-emphasis">Details</a></li>
+        {% if accounts|length < 3 %}
+        <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add New Account</a></li>
+        {% endif %}
+        {% else %}
+        <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add New Account</a></li>
+        {% endif %}
+        
+        
       </ul>
       <h8 class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Welcome {{ current_user.fullname
         }} </h8>
       <a class="btn btn-outline-primary me-2" href="{{ url_for('logout') }}">Logout</a>
 
-      </ul>
     </div>
   </div>
-  </div>
+  
 </header>
 <div class="b-example-divider"></div>
 {% endblock %}
 
 
 {% block body %}
-<div>
   {% if accounts|length != 0 %}
-  <div class="row p-2">
+  <div class="container-fluid row justify-content-center">
     {% for account in accounts %}
-    <div class="col-md-4">
-      <div class="card bg-dark text-white p-1 text-center" style="border-radius: 1rem">
-        <h3 class="text-center mb-3">Account in {{ account.currency }}</h3>
-        <div class="border rounded overflow-hidden flex-md-row shadow-sm h-md-250 position-relative">
-          <div class="p-1 d-flex flex-column position-static">
+    
+      <div class="col-auto card bg-dark text-white m-1 p-1 text-center" style="border-radius: 1rem">
+        <h3 class="text-center mb-1">Account in {{ account.currency }}</h3>
+        <div class="border rounded mb-1">
+          <div class="p-2">
             {% for total in totals %}
             {% if total.accountid == account.id %}
             <p class="mb-0 text-white-50">This should be Zero: {{ account.currency }}{{ total.total }}</p>
@@ -48,9 +47,8 @@
             {% endfor %}
             <div class="text-white">Last Update {{ account.datemodified.strftime('%d/%m/%Y') }} {{
               account.datemodified.strftime("%H:%M:%S") }}</div>
-            <hr>
-            <div class="row">
-              <div class="col-md-6">
+            <div class="justify-content-center">
+              <div>
                 <div class="card text-bg-dark border rounded p-1">
                   <h5 class="card-header text-center">Bank Distribution</h5>
                   {% for loca in locs %}
@@ -71,22 +69,22 @@
                   <button type="summit" class="btn btn-secondary p-1 col-12 updateLocations" account-id-bt='{{ account.id }}' id="updateLocations">UPDATE</button>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="card border text-bg-dark rounded">
+              </div>
+            </div>
+              <div class="p-2">
+            
+              <div class="justify-content-center">
+                <div class="card border text-bg-dark rounded p-1">
                   <h5 class="card-header text-center">Division of Money
                   </h5>
                   {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}
-                  <div class="card-body p-1 text-center">
+                  <div class="card-body p-0 m-0 text-center">
                     <p class="p-0 m-0 col-12">{{ dstr.name }}</p>
                     <div class="input-group">
                       <p class="input-group-text col-1 p-1 m-0">{{ account.currency }}</p>
                       <p class="form-control col-10 p-1 m-0">{{ dstr.amount }}</p>
                     </div>
-                   <!-- <div class="input-group">
-                       <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">ADD TRANSACTION</button>
-                      <button type="button" class="btn btn-secondary col-6" id="addDstr{{ dstr.accountid }}">VIEW DETAIL</button>
-                    </div>-->
                   </div>
                   {% endif %}
                   {% endfor %}
@@ -96,28 +94,29 @@
             
             <hr>
           </div>
-          <button class="btn btn-sm btn-danger deleteAccount" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
-          <button class="btn btn-sm btn-primary addtransaction" data-account-id="{{ account.id }}" id='addtransaction' onclick="redirectToAddTransaction('{{ account.id }}')">Add Transaction</button>
+          <button class="btn btn-sm btn-danger deleteAccount m-1" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
+          <button class="btn btn-sm btn-primary addtransaction m-1" data-account-id="{{ account.id }}" id='addtransaction' onclick="redirectToAddTransaction('{{ account.id }}')">Add Transaction</button>
           <menu type="context">
           
         </div>
-      </div>
-    </div>
+      
     {% endfor %}
-  </div>
   <hr>
-
+</div>
   {% else %}
-  <div class="col-md-12">
-    <div class="card">
+  <div>
+  <div class="container-fluid d-flex justify-content-center">
+    <div class="card bg-dark text-white p-2">
       <div class="card-body">
-        <p>No accounts found.</p>
-        <a href="{{ url_for('addact') }}" class="stretched-link">Create new account</a>
+        <p>No data found.</p>
+        <a href="{{ url_for('addact') }}" class="btn btn-sm btn-primary deleteAccount">Create new account</a>
+
       </div>
     </div>
   </div>
-  {% endif %}
 </div>
+  {% endif %}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="static/js/home.js"></script>
