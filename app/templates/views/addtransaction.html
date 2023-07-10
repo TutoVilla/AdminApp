@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 
 {% block header %}
-<header class="p-3 mb-3 border-bottom">
-  <div class="container">
+<header class="p-2 mb-3 border-bottom">
+  <div class="container-fluid">
     <div class="d-flex flex-wrap align-items-center justify-content-center mb-2">
 
 
@@ -54,11 +54,12 @@
 </div>
 <hr>   
 
-<div class="col-auto card bg-dark text-white p-2 justify-content" style="border-radius: 1rem">
+<div class="col-auto card bg-dark text-white m-1" style="border-radius: 1rem">
   <div class="container-fluid row justify-content-center" action="/addtransaction" method="POST">
-    <div class="col-6 card bg-dark text-white p-2" style="border-radius: 1rem"  id="showholders">
+  
+    <div class="col-auto card bg-dark text-white p-2 m-1" style="border-radius: 1rem"  id="showholders">
     </div>
-    <div class="col-6 card bg-dark text-white p-2" style="border-radius: 1rem"  id="showdetails">
+    <div class="card bg-dark text-white p-2 m-1" style="border-radius: 1rem"  id="showdetails">
     </div>
   </div>
 </div>
