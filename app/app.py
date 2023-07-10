@@ -108,13 +108,12 @@ def signup():
         return render_template('auth/signup.html')
  
  
-#recovery password to be defined 
+#recovery password. logic after get the email to be defined 
     
 @app.route('/recovery', methods=['GET', 'POST'])
 def recovery():
     if request.method == 'POST':
         email = request.form['email']
-        print(email)
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         if not re.match(email_regex, email):
             flash('Summit a valid Email')
@@ -345,7 +344,7 @@ def selectaccount():
 @login_required
 def accountdetails():
     accounts = DbFunctions.get_accounts(db, current_user.id)
-    return render_template('views/accountdetails.html')
+    return render_template('views/accountdetails.html', accounts=accounts)
 
 
 @app.route('/getdetails', methods=['POST'])
