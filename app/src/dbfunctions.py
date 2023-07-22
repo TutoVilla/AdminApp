@@ -22,6 +22,8 @@ class DbFunctions():
 
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def get_distribution(cls, db, idaccount: int):
@@ -41,6 +43,8 @@ class DbFunctions():
 
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def get_location(cls, db, idaccount: int):
@@ -60,6 +64,8 @@ class DbFunctions():
 
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def addAccountDistLoc(cls, db, loginid: int, currency, distribution_list, distribution_amounts, location_list, location_amounts, amount, datecreated, datemodified):
@@ -102,6 +108,8 @@ class DbFunctions():
             # Reversión de la transacción en caso de excepción
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def get_account(cls, db, id: int):
@@ -119,6 +127,8 @@ class DbFunctions():
 
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def delete_account(cls, db, id: int):
@@ -142,6 +152,8 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def update_location(cls, db, loc_dict, accountid):
@@ -159,6 +171,8 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
         
     @classmethod
     def update_distribution(cls, db, id_dist):
@@ -172,18 +186,31 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
         
     @classmethod
     def get_descriptions(cls,db):
         try:
             cursor = db.cursor()
-            sql = 'SELECT * from descriptions'
+            sql = 'SELECT * FROM descriptions'
             cursor.execute(sql)
             descr = cursor.fetchall()
+
+            # Verificar si la tabla tiene registros
+            if cursor.rowcount == 0:
+                sql_insert = "INSERT INTO descriptions (id, name) VALUES (0, 'Various')"
+                cursor.execute(sql_insert)
+                db.commit()
+                cursor.execute(sql)
+                descr = cursor.fetchall()
+
             return descr
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def update_registers(cls,db,list_of_lists):
@@ -224,6 +251,8 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
         
     
     @classmethod
@@ -259,6 +288,8 @@ class DbFunctions():
         except Exception as ex:
             db.rollback()
             raise Exception(ex)
+        finally:
+            cursor.close()
         
         
     @classmethod
@@ -271,6 +302,8 @@ class DbFunctions():
             return result
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
     
     
     
