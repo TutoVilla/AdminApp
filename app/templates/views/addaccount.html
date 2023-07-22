@@ -3,7 +3,7 @@
 {% block header %}
 <header class="p-2 mb-3 border-bottom">
   <div class="container-fluid">
-    <div class="d-flex flex-wrap align-items-center justify-content-center mb-2">
+    <div class="d-flex flex-wrap justify-content-center mb-2">
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-body-emphasis">Dashboard</a></li>
 
@@ -11,7 +11,7 @@
         <li><a href="{{ url_for('addtransaction') }}" class="nav-link px-2 link-body-emphasis">Accounts</a></li>
         <li><a href="{{ url_for('accountdetails') }}" class="nav-link px-2 link-body-emphasis">Details</a></li>
         {% if accounts|length < 3 %}
-        <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-body-emphasis">Add New Account</a></li>
+        <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-secondary">Add New Account</a></li>
         {% endif %}
         {% else %}
         <li><a href="{{ url_for('addact') }}" class="nav-link px-2 link-secondary">Add New Account</a></li>
@@ -28,20 +28,16 @@
   </div>
   </div>
 </header>
-<div class="b-example-divider"></div>
 {% endblock %}
 
 {% block body %}
-<div>
+
 <form action="/addact" method="POST">
   <!--First Block-->
-  <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
-        <div class="col-3">
-          <p class="font-weight-bold">Currency Type:</p>
-        </div>
-        <div class="col-3">
+  <div class="card bg-dark text-white justify-content">
+    <div class="container-fluid col-auto p-2">
           <select class="form-control" name="currency_type" id="currency_type" placeholder="currency_type" required>
-            <option value="..." selected>Select</option>
+            <option value="..." selected>Select Divisa</option>
             {% if '$' not in accounts %}
             <option value="$">$ Dolars</option>
             {% endif %}
@@ -53,73 +49,66 @@
             {% endif %}
           </select>
         </div>
-  
   </div>
-  <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center" id="output"></div>
+  <div class="card bg-dark text-white p-2 mt-2 justify-content-center" id="output"></div>
   <!--Second Block-->
   
-
-    <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
-      <div class="col-12">
-        <h4>Bank Distribution</h4>
+<div class="container-fluid row d-flex justify-content-center mb-2">
+  <div class="container-fluid col-auto card bg-dark text-white p-2 mt-2 justify-content-center">
+      <div>
+        <h4>Banks & Cash</h4>
       </div>
-      <div class="row justify-content-end">
-      <div class="row col-12 justify-content-center align-items-center" id="distributionb">
-        <div class="col-4">
-          <input type="text" class="form-control" placeholder="Input" aria-label="loc-0" name="loc-0" id="loc-0"
+      <div id="distributionb">
+        <div class="container-fluid row justify-content-left">
+        <div class="col-auto mb-2">
+          <input type="text" class="form-control" placeholder="Cash" value="Cash" aria-label="loc-0" name="loc-0" id="loc-0"
             required>
         </div>
-        <div class="col-3">
-          <p class="font-weight-bold">Amount:</p>
-        </div>
-        <div class="col-4">
-          <input type="number" step="0.01" class="form-control" placeholder="0.00" aria-label="amountB-0"
+        <div class="col-auto mb-2">
+          
+          <input type="number" step="0.01" class="form-control" placeholder="0.00" value="0.00" aria-label="amountB-0"
             name="amountB-0" id="amountB-0" required>
-          <div class="col-2"></div>
         </div>
-        <div class="col-1"></div>
-        
       </div>
-      <button class=" col-2 btn btn-outline-primary m-2" id="addLocGroup" type="button">Add field</button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+    <button class="col-auto btn btn-primary m-2" id="addLocGroup" type="button">Add Bank</button>
     </div>
   </div>
 
   <!--Third Block-->
   
 
-    <div class="card bg-dark text-white p-1 m-2  text-center justify-content-center align-items-center">
-      <div class="col-12">
-        <h4>Division of Money</h4>
+    <div class="container-fluid col-auto card bg-dark text-white p-2 mt-2 justify-content-center">
+      <div>
+        <h4>Distribution</h4>
       </div>
-      <div class="row justify-content-end">
-      <div class="row col-12 justify-content-center align-items-center" id='distribution'>
-        <div class="col-4">
-          <input type="text" class="form-control" placeholder="Input" aria-label="Dist-0" name="Dist-0" id="Dist-0"
+      <div id='distribution'>
+        <div class="container-fluid row justify-content-left">
+        <div class="col-auto mb-2">
+          <input type="text" class="form-control" placeholder="Personal" value="Personal" aria-label="Dist-0" name="Dist-0" id="Dist-0"
             required>
         </div>
-        <div class="col-3">
-          <p class="font-weight-bold">Amount:</p>
-        </div>
-        <div class="col-4">
-          <input type="number" step="0.01" class="form-control" placeholder="0.00" aria-label="amount-0" name="amount-0"
+        <div class="col-auto mb-2">
+          <input type="number" step="0.01" class="form-control" placeholder="0.00" value="0.00" aria-label="amount-0" name="amount-0"
             id="amount-0" required>
-            <div class="col-2"></div>
+            
         </div>
-        <div class="col-1"></div>
-
+      </div>
+    </div>
 
         <!--New Inputs blow-->
-        
+        <div class="d-flex justify-content-center align-items-center">
+          <button class="btn btn-primary m-2" id="addInputGroup" type="button">Add Credit/Deb</button>
       </div>
-      <button class=" col-2 btn btn-outline-primary m-2" id="addInputGroup" type="button">Add field</button>
+      
     </div>
   </div>
 
-
-  <div class="container text-center">
+  
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <button type="submit" class="btn btn-primary" id="submit_button">Create Account</button>
-  </div>
+    <button type="submit" class="btn btn-success btn-lg mt-2" id="submit_button">Create Account</button>
+  
 </form>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
