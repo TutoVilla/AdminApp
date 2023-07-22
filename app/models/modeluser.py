@@ -19,6 +19,8 @@ class ModelUser():
                 return None
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def get_by_id(cls, db, idlogin):
@@ -34,6 +36,8 @@ class ModelUser():
                 return None
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()
 
     @classmethod
     def new_user(cls, db, newuser):
@@ -53,3 +57,5 @@ class ModelUser():
                 return True
         except Exception as ex:
             raise Exception(ex)
+        finally:
+            cursor.close()

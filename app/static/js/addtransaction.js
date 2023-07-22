@@ -67,8 +67,7 @@ selector.addEventListener("change", () => {
         if (response.holders.hasOwnProperty(key)) {
           var value = response.holders[key];
           const div1 = createElement("div", [
-            "card-header",
-            "col-12",
+            "container-fluid",
             "border",
             "rounded",
             "p-1",
@@ -79,11 +78,9 @@ selector.addEventListener("change", () => {
           const p2 = createElement("p", ["mb-0", "col-12"]);
           const hr1 = createElement("hr", ["col-12"]);
           const div2 = createElement("div", [
-            "card-body",
-            "col-12",
+            "container-fluid",
             "border",
             "rounded",
-            "p-1",
             "row",
           ]);
           div2.setAttribute("id", "body-" + holder);
@@ -115,9 +112,9 @@ selector.addEventListener("change", () => {
             "description-" + holder + "-" + indexKey
           );
           const addfield = createElement("button", [
-            "col-6",
+            "col-auto",
             "btn",
-            "btn-outline-primary",
+            "btn-primary",
             "m-2",
           ]);
           addfield.setAttribute("type", "button");
@@ -159,11 +156,11 @@ selector.addEventListener("change", () => {
               "description-" + idbutton + "-" + indexKey
             );
 
-            const br = document.createElement("br");
 
-            const inputColumn = createElement("div", ["col-4"]);
-            const descriptionColumn = createElement("div", ["col-4"]);
-            const textInputColumn = createElement("div", ["col-4"]);
+            const inputColumn = createElement("div", ["col-sm-4","p-1"]);
+            const descriptionColumn = createElement("div", ["col-sm-4","p-1"]);
+            const textInputColumn = createElement("div", ["col-sm-4","p-1"]);
+            const hr = createElement('hr',[])
 
             inputColumn.appendChild(input);
             descriptionColumn.appendChild(description);
@@ -172,7 +169,7 @@ selector.addEventListener("change", () => {
             div.appendChild(inputColumn);
             div.appendChild(descriptionColumn);
             div.appendChild(textInputColumn);
-            div.appendChild(br);
+            div.appendChild(hr);
             indexKey++;
             addevent(input, holdersKey, response.currency);
           });
@@ -184,9 +181,10 @@ selector.addEventListener("change", () => {
           div1.appendChild(p2);
           div1.appendChild(hr1);
 
-          const inputColumn = createElement("div", ["col-4"]);
-          const descriptionColumn = createElement("div", ["col-4"]);
-          const textInputColumn = createElement("div", ["col-4"]);
+          const inputColumn = createElement("div", ["col-sm-4","p-1"]);
+          const descriptionColumn = createElement("div", ["col-sm-4","p-1"]);
+          const textInputColumn = createElement("div", ["col-sm-4","p-1"]);
+          const hr = createElement('hr',[])
 
           inputColumn.appendChild(input);
           descriptionColumn.appendChild(description);
@@ -195,6 +193,7 @@ selector.addEventListener("change", () => {
           div2.appendChild(inputColumn);
           div2.appendChild(descriptionColumn);
           div2.appendChild(textInputColumn);
+          div2.appendChild(hr);
 
           div1.appendChild(div2);
           div1.appendChild(addfield);
@@ -207,7 +206,7 @@ selector.addEventListener("change", () => {
         }
       }
 
-      const update = createElement("button", ["btn", "btn-primary"]);
+      const update = createElement("button", ["btn", "btn-success"]);
       update.setAttribute("type", "button");
       update.setAttribute("id", "updateButton");
       update.setAttribute("data-key", id);
@@ -278,9 +277,9 @@ selector.addEventListener("change", () => {
       }
 
       const detailDiv2 = document.createElement("div", []);
-      detailDiv2.setAttribute("class", "card-body border rounded p-1");
+      detailDiv2.setAttribute("class", "card-body border rounded p-1 table-responsive");
       var table = document.createElement("table")
-      table.setAttribute("class", "table table-bordered table-dark table-responsive")
+      table.setAttribute("class", "table table-bordered table-dark")
 
       // Crea la fila de encabezado
       var headerRow = document.createElement("tr");
