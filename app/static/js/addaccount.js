@@ -18,31 +18,26 @@ function createField(
   output,
   arrayStatic
 ) {
+  const container_0 = document.createElement("div");
+  container_0.classList.add("container-fluid", "row", "justify-content-left");
+  container_0.setAttribute("id", `${const3}-${index}`);
+
   const container_1 = document.createElement("div");
-  container_1.classList.add("col-4");
+  container_1.classList.add("col-auto", "mb-2");
   container_1.setAttribute("id", `${const1}-${index}`);
 
   const newInput = document.createElement("input");
   newInput.setAttribute("type", "text");
   newInput.setAttribute("class", "form-control");
-  newInput.setAttribute("placeholder", "Input");
+  newInput.setAttribute("placeholder", "Bank Name");
   newInput.setAttribute("aria-label", `${const2}-${index}`);
   newInput.setAttribute("name", `${const2}-${index}`);
   newInput.setAttribute("id", `${const2}-${index}`);
   newInput.setAttribute("required", "");
   container_1.appendChild(newInput);
 
-  const container_2 = document.createElement("div");
-  container_2.classList.add("col-3");
-  container_2.setAttribute("id", `${const3}-${index}`);
-
-  const p_1 = document.createElement("p");
-  p_1.classList.add("font-weight-bold");
-  p_1.textContent = "Amount";
-  container_2.appendChild(p_1);
-
   const container_3 = document.createElement("div");
-  container_3.classList.add("col-4");
+  container_3.classList.add("col-auto", "mb-2");
   container_3.setAttribute("id", `${const4}-${index}`);
 
   const newAmount = document.createElement("input");
@@ -58,7 +53,7 @@ function createField(
   container_3.appendChild(newAmount);
 
   const container_4 = document.createElement("div");
-  container_4.classList.add("col-1");
+  container_4.classList.add("col-auto");
   container_4.setAttribute("id", `${const6}-${index}`);
 
   const deleted = document.createElement("button");
@@ -69,10 +64,12 @@ function createField(
   deleted.textContent = "X";
   container_4.appendChild(deleted);
 
-  dist.appendChild(container_1);
-  dist.appendChild(container_2);
-  dist.appendChild(container_3);
-  dist.appendChild(container_4);
+  const hrhr = document.createElement("hr");
+  dist.appendChild(container_0);
+  container_0.appendChild(hrhr);
+  container_0.appendChild(container_1);
+  container_0.appendChild(container_3);
+  container_0.appendChild(container_4);
 
   const deleteButton = document.getElementById(`${const7}-${index}`);
   const cont1 = document.getElementById(`${const1}-${index}`);
@@ -82,8 +79,8 @@ function createField(
   const deleteElement = `${const5}-${index}`;
 
   deleteButton.addEventListener("click", () => {
-    cont1.parentNode.removeChild(cont1);
     cont2.parentNode.removeChild(cont2);
+    cont1.parentNode.removeChild(cont1);
     cont3.parentNode.removeChild(cont3);
     cont4.parentNode.removeChild(cont4);
 
