@@ -52,20 +52,19 @@
             </div>
           </div>
           </div>
-          <div class="container-fluid row justify-content-center">
-          <div class="container justify-content-center">
-              <div class="col-auto card card border text-bg-dark rounded m-1 p-1">
+          <div class="container-fluid d-flex flex-wrap justify-content-center">
+              <div class="col-auto card border text-bg-dark rounded m-1 p-1">
                 <div>
                   <h5 class="card-header text-center">Bank Distribution</h5>
                 </div>
                   {% for loca in locs %}
                   {% if loca.accountid == account.id %}
                   <div class="card-body p-0 m-0 text-center">
-                      <p class="mb-0 col-12">{{ loca.name }}</p>
+                      <p class="mb-0">{{ loca.name }}</p>
                       <div class="input-group">
-                        <span class="input-group-text col-1">{{ account.currency }}</span>
+                        <span class="input-group-text">{{ account.currency }}</span>
                         
-                        <input type="number" data-loc-id="{{ loca.idlocation }}" account-id='{{ account.id }}' id="locations" class="form-control loca-amount col-6" value="{{ loca.amount }}">
+                        <input type="number" data-loc-id="{{ loca.idlocation }}" account-id='{{ account.id }}' id="locations" class="form-control col" value="{{ loca.amount }}">
                       </div>
                 
                   </div>
@@ -73,9 +72,9 @@
                   {% endfor %}
                   <hr>
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                  <button type="summit" class="btn btn-secondary p-1 col-12 updateLocations" account-id-bt='{{ account.id }}' id="updateLocations">UPDATE</button>
+                  <button type="summit" class="btn btn-secondary p-1 col-auto updateLocations" account-id-bt='{{ account.id }}' id="updateLocations">UPDATE</button>
               </div>
-              <div class="col-auto card card border text-bg-dark rounded m-1 p-1">
+              <div class="col-auto card border text-bg-dark rounded m-1 p-1">
                 <div>
                   <h5 class="card-header text-center">Division of Money
                   </h5>
@@ -83,17 +82,15 @@
                   {% for dstr in dsrts %}
                   {% if dstr.accountid == account.id %}
                   <div class="card-body p-0 m-0 text-center">
-                    <p class="p-0 m-0 col-12">{{ dstr.name }}</p>
+                    <p class="p-0 m-0 col-auto">{{ dstr.name }}</p>
                     <div class="input-group">
-                      <p class="input-group-text col-1 p-1 m-0">{{ account.currency }}</p>
-                      <p class="form-control col-10 p-1 m-0">{{ dstr.amount }}</p>
+                      <p class="input-group-text col-auto p-1 m-0">{{ account.currency }}</p>
+                      <p class="form-control col-auto p-1 m-0">{{ dstr.amount }}</p>
                     </div>
                   </div>
                   {% endif %}
                   {% endfor %}
               </div>
-              
-            </div>
           </div>
         </div>
         <button class="btn btn-sm btn-danger deleteAccount m-1" data-account-id="{{ account.id }}" id='deleteAccount'>Eliminar</button>
